@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Block draft content (Astro doesn't serve them, but good practice)
+Disallow: /src/
+
+Sitemap: https://ChuongDHA.github.io/sitemap-index.xml

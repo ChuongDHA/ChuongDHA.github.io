@@ -1,0 +1,657 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import { portfolio } from '@/data/portfolio';
+
+const hasFormEndpoint = !!portfolio.formEndpoint;
+---
+
+<BaseLayout
+  title="Liên hệ"
+  description={`Liên hệ với ${portfolio.name}. Sẵn sàng cho cơ hội hợp tác mới.`}
+>
+  <SiteHeader />
+
+  <main id="main-content">
+
+    <!-- PAGE HERO -->
+    <section class="contact-hero section">
+      <div class="container">
+        <p class="eyebrow">Liên hệ</p>
+        <h1 class="page-title">Hãy bắt đầu<br /><em>cuộc trò chuyện</em></h1>
+        <p class="page-desc">
+          Tôi luôn mở lòng với những dự án thú vị, cơ hội hợp tác hoặc đơn giản là một cuộc trò chuyện thú vị.
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTACT LAYOUT -->
+    <section class="contact-section section">
+      <div class="container contact-inner">
+
+        <!-- Contact info -->
+        <div class="contact-info">
+          <!-- Email -->
+          <div class="contact-block">
+            <h2 class="contact-block-title">Email</h2>
+            <div class="email-actions">
+              <a href={`mailto:${portfolio.email}`} class="contact-email">
+                {portfolio.email}
+              </a>
+              <button class="copy-email-btn" id="copy-email-btn" aria-label="Sao chép email">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <span class="copy-feedback" id="copy-email-feedback" aria-live="polite" hidden>✓</span>
+            </div>
+          </div>
+
+          <!-- Social links -->
+          <div class="contact-block">
+            <h2 class="contact-block-title">Mạng xã hội</h2>
+            <div class="social-list">
+              {portfolio.socialLinks.map((link) => (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-item"
+                >
+                  <span class="social-label">{link.label}</span>
+                  <span class="social-arrow" aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Decorative element -->
+          <div class="contact-decoration" aria-hidden="true">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 20 Q140 60 140 100 Q140 140 100 180 Q60 140 60 100 Q60 60 100 20Z"
+                stroke="var(--color-jade)" stroke-width="1" fill="none" opacity="0.4"/>
+              <path d="M20 100 Q60 60 100 60 Q140 60 180 100 Q140 140 100 140 Q60 140 20 100Z"
+                stroke="var(--color-ocean)" stroke-width="1" fill="none" opacity="0.3"/>
+              <circle cx="100" cy="100" r="12" fill="var(--color-terracotta)" opacity="0.4"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Contact form -->
+        <div class="contact-form-wrap">
+          <h2 class="form-title">Gửi lời nhắn</h2>
+
+          {!hasFormEndpoint && (
+            <div class="form-notice" role="alert">
+              <p>
+                <strong>Lưu ý:</strong> Form chưa được cấu hình endpoint. Hãy đặt biến môi trường
+                <code>PUBLIC_FORMSPREE_ENDPOINT</code> với URL từ <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree</a>.
+                Trong lúc đó, bạn có thể liên hệ trực tiếp qua email.
+              </p>
+              <a href={`mailto:${portfolio.email}?subject=Liên hệ qua portfolio`} class="btn btn-primary mailto-fallback">
+                Gửi email trực tiếp
+              </a>
+            </div>
+          )}
+
+          <form
+            class="contact-form"
+            id="contact-form"
+            method="POST"
+            action={hasFormEndpoint ? portfolio.formEndpoint : undefined}
+            novalidate
+          >
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name" class="form-label">
+                  Tên của bạn <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name="name"
+                  class="form-input"
+                  required
+                  autocomplete="name"
+                  aria-required="true"
+                  aria-describedby="name-error"
+                  placeholder="Nguyễn Văn A"
+                />
+                <span class="form-error" id="name-error" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-email" class="form-label">
+                  Email <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="contact-email"
+                  name="email"
+                  class="form-input"
+                  required
+                  autocomplete="email"
+                  aria-required="true"
+                  aria-describedby="email-error"
+                  placeholder="ten@example.com"
+                />
+                <span class="form-error" id="email-error" role="alert"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-subject" class="form-label">Chủ đề (tùy chọn)</label>
+              <input
+                type="text"
+                id="contact-subject"
+                name="subject"
+                class="form-input"
+                placeholder="Bạn muốn nói về điều gì?"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message" class="form-label">
+                Nội dung <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="contact-message"
+                name="message"
+                class="form-input form-textarea"
+                required
+                rows="6"
+                aria-required="true"
+                aria-describedby="message-error"
+                placeholder="Hãy chia sẻ điều bạn muốn nói..."
+              ></textarea>
+              <span class="form-error" id="message-error" role="alert"></span>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-submit-wrap">
+              <button
+                type="submit"
+                class="btn btn-primary form-submit"
+                id="submit-btn"
+                disabled={!hasFormEndpoint}
+              >
+                <span class="submit-text">Gửi lời nhắn</span>
+                <span class="submit-spinner" aria-hidden="true" hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinner-icon">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                  </svg>
+                </span>
+              </button>
+            </div>
+
+            <!-- Success message -->
+            <div class="form-success" id="form-success" role="alert" hidden>
+              <p>✓ Cảm ơn bạn! Tôi sẽ phản hồi sớm nhất có thể.</p>
+            </div>
+
+            <!-- Error message -->
+            <div class="form-error-msg" id="form-error-msg" role="alert" hidden>
+              <p>Có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp qua email.</p>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .contact-hero {
+    background: var(--color-paper-deep);
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-jade);
+    margin-bottom: 0.75rem;
+    max-width: none;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.875rem;
+  }
+
+  .page-title em {
+    font-style: italic;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-desc {
+    font-size: 1.0625rem;
+    color: var(--color-ink-soft);
+    max-width: 52ch;
+  }
+
+  /* Contact layout */
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  /* Contact info */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .contact-block-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .email-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .contact-email {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-ocean);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .contact-email:hover {
+    color: var(--color-jade);
+  }
+
+  .copy-email-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: none;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .copy-email-btn:hover {
+    border-color: var(--color-ocean);
+    color: var(--color-ocean);
+  }
+
+  .copy-feedback {
+    font-size: 0.8125rem;
+    color: var(--color-jade);
+    font-weight: 600;
+  }
+
+  .social-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .social-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .social-item:hover {
+    border-color: var(--color-ocean);
+    background: rgba(0, 129, 167, 0.05);
+    transform: translateX(4px);
+  }
+
+  .social-label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .social-arrow {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    transition: color var(--transition-fast);
+  }
+
+  .social-item:hover .social-arrow {
+    color: var(--color-ocean);
+  }
+
+  .contact-decoration svg {
+    width: 140px;
+    height: 140px;
+    opacity: 0.7;
+  }
+
+  /* Form */
+  .form-title {
+    font-size: 1.375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-notice {
+    background: rgba(0, 129, 167, 0.06);
+    border: 1px solid rgba(0, 129, 167, 0.2);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-notice p {
+    font-size: 0.9375rem;
+    color: var(--color-ink-soft);
+    max-width: none;
+  }
+
+  .form-notice code {
+    font-size: 0.875em;
+    background: rgba(0, 129, 167, 0.1);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  .mailto-fallback {
+    align-self: flex-start;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .required-mark {
+    color: var(--color-terracotta);
+  }
+
+  .form-input {
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-input);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    background: white;
+    width: 100%;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .form-input::placeholder {
+    color: var(--color-muted);
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-ocean);
+    box-shadow: 0 0 0 3px rgba(0, 129, 167, 0.12);
+  }
+
+  .form-input.invalid {
+    border-color: var(--color-terracotta);
+  }
+
+  .form-input.invalid:focus {
+    box-shadow: 0 0 0 3px rgba(240, 113, 103, 0.15);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  .form-error {
+    font-size: 0.8125rem;
+    color: var(--color-terracotta);
+    min-height: 1.2em;
+  }
+
+  .form-submit-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .form-submit {
+    min-width: 160px;
+  }
+
+  .form-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .spinner-icon {
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .form-success {
+    padding: 1rem 1.25rem;
+    background: rgba(0, 175, 185, 0.1);
+    border: 1px solid rgba(0, 175, 185, 0.3);
+    border-radius: 12px;
+    color: var(--color-jade);
+    font-weight: 500;
+  }
+
+  .form-success p { max-width: none; color: var(--color-jade); }
+
+  .form-error-msg {
+    padding: 1rem 1.25rem;
+    background: rgba(240, 113, 103, 0.1);
+    border: 1px solid rgba(240, 113, 103, 0.3);
+    border-radius: 12px;
+    color: var(--color-terracotta);
+  }
+
+  .form-error-msg p { max-width: none; color: var(--color-terracotta); }
+
+  @media (max-width: 1024px) {
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .contact-info {
+      position: static;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Copy email
+  const copyEmailBtn = document.getElementById('copy-email-btn');
+  const copyEmailFeedback = document.getElementById('copy-email-feedback');
+
+  copyEmailBtn?.addEventListener('click', async () => {
+    const email = copyEmailBtn.closest('.email-actions')?.querySelector('a')?.textContent ?? '';
+    try {
+      await navigator.clipboard.writeText(email.trim());
+    } catch {
+      const input = document.createElement('input');
+      input.value = email.trim();
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
+    if (copyEmailFeedback) {
+      copyEmailFeedback.hidden = false;
+      setTimeout(() => { copyEmailFeedback.hidden = true; }, 2000);
+    }
+  });
+
+  // Form validation + submission
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const submitText = submitBtn?.querySelector('.submit-text');
+  const submitSpinner = submitBtn?.querySelector('.submit-spinner');
+  const formSuccess = document.getElementById('form-success');
+  const formErrorMsg = document.getElementById('form-error-msg');
+
+  function getField(id: string) {
+    return document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement;
+  }
+
+  function showError(fieldId: string, errorId: string, message: string) {
+    const field = getField(fieldId);
+    const error = document.getElementById(errorId);
+    field?.classList.add('invalid');
+    if (error) error.textContent = message;
+  }
+
+  function clearError(fieldId: string, errorId: string) {
+    const field = getField(fieldId);
+    const error = document.getElementById(errorId);
+    field?.classList.remove('invalid');
+    if (error) error.textContent = '';
+  }
+
+  function validateForm(): boolean {
+    let valid = true;
+
+    const name = getField('contact-name').value.trim();
+    const email = getField('contact-email').value.trim();
+    const message = getField('contact-message').value.trim();
+
+    clearError('contact-name', 'name-error');
+    clearError('contact-email', 'email-error');
+    clearError('contact-message', 'message-error');
+
+    if (!name) {
+      showError('contact-name', 'name-error', 'Vui lòng nhập tên của bạn.');
+      valid = false;
+    }
+
+    if (!email) {
+      showError('contact-email', 'email-error', 'Vui lòng nhập email.');
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('contact-email', 'email-error', 'Email không hợp lệ.');
+      valid = false;
+    }
+
+    if (!message) {
+      showError('contact-message', 'message-error', 'Vui lòng nhập nội dung lời nhắn.');
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    // Check if endpoint exists
+    const action = form.action;
+    if (!action || action === 'undefined') {
+      // Fallback: compose mailto
+      const name = getField('contact-name').value.trim();
+      const email = getField('contact-email').value.trim();
+      const subject = getField('contact-subject').value.trim();
+      const message = getField('contact-message').value.trim();
+      const body = encodeURIComponent(`Từ: ${name}\nEmail: ${email}\n\n${message}`);
+      const subjectEncoded = encodeURIComponent(subject || 'Liên hệ qua portfolio');
+      window.location.href = `mailto:${encodeURIComponent('hello@example.com')}?subject=${subjectEncoded}&body=${body}`;
+      return;
+    }
+
+    // Submit to Formspree
+    submitBtn.disabled = true;
+    if (submitText) (submitText as HTMLElement).hidden = true;
+    if (submitSpinner) (submitSpinner as HTMLElement).hidden = false;
+
+    try {
+      const data = new FormData(form);
+      const response = await fetch(action, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+
+      if (response.ok) {
+        form.reset();
+        if (formSuccess) formSuccess.hidden = false;
+        if (formErrorMsg) formErrorMsg.hidden = true;
+      } else {
+        throw new Error('Server error');
+      }
+    } catch {
+      if (formErrorMsg) formErrorMsg.hidden = false;
+      if (formSuccess) formSuccess.hidden = true;
+    } finally {
+      submitBtn.disabled = false;
+      if (submitText) (submitText as HTMLElement).hidden = false;
+      if (submitSpinner) (submitSpinner as HTMLElement).hidden = true;
+    }
+  });
+</script>

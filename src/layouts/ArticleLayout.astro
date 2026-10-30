@@ -1,0 +1,62 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import { portfolio } from '@/data/portfolio';
+
+interface Props {
+  title: string;
+  description?: string;
+  cover?: string;
+  pubDate?: Date;
+  updatedDate?: Date;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  cover,
+  pubDate,
+  updatedDate,
+  tags = [],
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = cover ? new URL(cover, Astro.site).href : portfolio.seo.ogImage;
+
+// Estimate reading time (avg 200 words/min)
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={imageURL}
+  type="article"
+  pubDate={pubDate}
+>
+  <!-- Article JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": title,
+    "description": description,
+    "url": canonicalURL.href,
+    "datePublished": pubDate?.toISOString(),
+    "dateModified": updatedDate?.toISOString() ?? pubDate?.toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": portfolio.name,
+    },
+    "image": imageURL,
+    "keywords": tags.join(', '),
+  })} slot="head" />
+
+  <SiteHeader />
+
+  <main id="main-content">
+    <slot />
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

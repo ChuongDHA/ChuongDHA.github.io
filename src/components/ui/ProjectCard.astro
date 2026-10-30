@@ -1,0 +1,164 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  tags?: string[];
+  href?: string;
+  variant?: 'default' | 'dark' | 'gradient';
+}
+
+const {
+  title,
+  description,
+  tags = [],
+  href = '#',
+  variant = 'default',
+} = Astro.props;
+---
+
+<article class:list={['project-card', `project-card--${variant}`]}>
+  <!-- Decorative motif -->
+  <div class="project-card-motif" aria-hidden="true">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="45" stroke="currentColor" stroke-width="0.75" opacity="0.4"/>
+      <path d="M30 60 Q60 20 90 60 Q60 100 30 60Z" stroke="currentColor" stroke-width="0.75" fill="none" opacity="0.3"/>
+      <circle cx="60" cy="60" r="8" fill="currentColor" opacity="0.15"/>
+    </svg>
+  </div>
+
+  <div class="project-card-body">
+    <div class="project-card-tags">
+      {tags.map((tag) => <span class="project-tag">{tag}</span>)}
+    </div>
+
+    <h3 class="project-card-title">{title}</h3>
+    <p class="project-card-desc">{description}</p>
+
+    <a href={href} class="project-card-link" aria-label={`Xem dự án: ${title}`}>
+      Xem dự án
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    padding: 2rem;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .project-card--default {
+    background: white;
+    color: var(--color-ink);
+  }
+
+  .project-card--dark {
+    background: var(--color-ink);
+    color: white;
+    border-color: rgba(255,255,255,0.08);
+  }
+
+  .project-card--gradient {
+    background: var(--gradient-warm);
+    color: var(--color-ink);
+    border: none;
+  }
+
+  /* Decorative motif */
+  .project-card-motif {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 160px;
+    height: 160px;
+    opacity: 0;
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+    pointer-events: none;
+  }
+
+  .project-card--default .project-card-motif { color: var(--color-jade); }
+  .project-card--dark .project-card-motif { color: var(--color-parchment); }
+  .project-card--gradient .project-card-motif { color: var(--color-ocean); }
+
+  .project-card:hover .project-card-motif {
+    opacity: 1;
+    transform: rotate(15deg) scale(1.05);
+  }
+
+  /* Body */
+  .project-card-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .project-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-tag {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    border: 1px solid currentColor;
+    opacity: 0.6;
+  }
+
+  .project-card-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .project-card--default .project-card-title { color: var(--color-ink); }
+  .project-card--dark .project-card-title { color: white; }
+
+  .project-card-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    opacity: 0.75;
+    max-width: none;
+  }
+
+  .project-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: gap var(--transition-base), color var(--transition-fast);
+  }
+
+  .project-card--default .project-card-link { color: var(--color-ocean); }
+  .project-card--dark .project-card-link { color: var(--color-jade); }
+  .project-card--gradient .project-card-link { color: var(--color-ink); }
+
+  .project-card-link:hover {
+    gap: 0.625rem;
+  }
+</style>

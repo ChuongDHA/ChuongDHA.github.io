@@ -1,0 +1,60 @@
+media:
+  input: public/images/posts
+  output: /images/posts
+
+content:
+  - name: posts
+    label: Bài viết
+    type: collection
+    path: src/content/posts
+    filename: "{fields.title | slugify}"
+    view:
+      fields: [title, pubDate, category, draft, featured]
+    fields:
+      - name: title
+        label: Tiêu đề
+        type: string
+        required: true
+      - name: description
+        label: Mô tả ngắn
+        type: string
+        required: true
+      - name: pubDate
+        label: Ngày đăng
+        type: date
+        required: true
+        options:
+          format: "yyyy-MM-dd"
+      - name: updatedDate
+        label: Ngày cập nhật
+        type: date
+        options:
+          format: "yyyy-MM-dd"
+      - name: cover
+        label: Ảnh đại diện
+        type: image
+      - name: coverAlt
+        label: Mô tả ảnh đại diện
+        type: string
+      - name: category
+        label: Chuyên mục
+        type: string
+      - name: tags
+        label: Tags
+        type: list
+        options:
+          item:
+            type: string
+      - name: draft
+        label: Bản nháp
+        type: boolean
+        default: true
+      - name: featured
+        label: Bài nổi bật
+        type: boolean
+        default: false
+      - name: body
+        label: Nội dung bài viết
+        type: rich-text
+        options:
+          format: markdown

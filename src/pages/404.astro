@@ -1,0 +1,121 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+---
+
+<BaseLayout title="404 — Trang không tồn tại" description="Trang bạn đang tìm kiếm không tồn tại.">
+  <SiteHeader />
+
+  <main id="main-content" class="not-found-page">
+    <div class="container not-found-inner">
+      <!-- Decorative artwork -->
+      <div class="not-found-art" aria-hidden="true">
+        <svg viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="140" cy="140" r="110" stroke="var(--color-jade)" stroke-width="1" opacity="0.2"/>
+          <circle cx="140" cy="140" r="75" stroke="var(--color-ocean)" stroke-width="1" opacity="0.15"/>
+          <text x="140" y="155" text-anchor="middle" font-family="serif" font-size="72" fill="var(--color-parchment)" font-weight="400">404</text>
+          <!-- Wave path -->
+          <path d="M60 180 Q100 150 140 180 Q180 210 220 180"
+            stroke="var(--color-terracotta)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+          <!-- Lotus petals -->
+          <ellipse cx="140" cy="90" rx="20" ry="30" stroke="var(--color-jade)" stroke-width="1" opacity="0.3" fill="none"/>
+          <ellipse cx="140" cy="90" rx="20" ry="30" stroke="var(--color-jade)" stroke-width="1" opacity="0.2" fill="none" transform="rotate(60 140 90)"/>
+          <ellipse cx="140" cy="90" rx="20" ry="30" stroke="var(--color-jade)" stroke-width="1" opacity="0.2" fill="none" transform="rotate(120 140 90)"/>
+        </svg>
+      </div>
+
+      <div class="not-found-content">
+        <p class="not-found-eyebrow">Lỗi 404</p>
+        <h1 class="not-found-title">Trang không tồn tại</h1>
+        <p class="not-found-desc">
+          Trang bạn đang tìm kiếm có thể đã bị xóa, đổi tên hoặc chưa bao giờ tồn tại.
+          Hãy quay lại trang chủ hoặc khám phá bài viết của tôi.
+        </p>
+
+        <div class="not-found-actions">
+          <a href="/" class="btn btn-primary">← Trang chủ</a>
+          <a href="/post/" class="btn btn-secondary">Xem bài viết</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .not-found-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .not-found-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: center;
+    padding-block: 4rem;
+  }
+
+  .not-found-art svg {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .not-found-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .not-found-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-terracotta);
+    max-width: none;
+  }
+
+  .not-found-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 400;
+  }
+
+  .not-found-desc {
+    font-size: 1.0625rem;
+    color: var(--color-ink-soft);
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+
+  .not-found-actions {
+    display: flex;
+    gap: 0.875rem;
+    flex-wrap: wrap;
+    padding-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .not-found-inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .not-found-art {
+      display: flex;
+      justify-content: center;
+    }
+
+    .not-found-art svg {
+      max-width: 200px;
+    }
+
+    .not-found-actions {
+      justify-content: center;
+    }
+  }
+</style>

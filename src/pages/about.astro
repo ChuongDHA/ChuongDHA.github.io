@@ -1,0 +1,524 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/layout/SiteHeader.astro';
+import SiteFooter from '@/components/layout/SiteFooter.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { portfolio } from '@/data/portfolio';
+---
+
+<BaseLayout
+  title="Về tôi"
+  description={`Câu chuyện và định hướng của ${portfolio.name}`}
+>
+  <SiteHeader />
+
+  <main id="main-content">
+
+    <!-- PAGE HERO -->
+    <section class="page-hero section">
+      <div class="container page-hero-inner">
+        <p class="page-hero-eyebrow">Đôi điều về tôi</p>
+        <h1 class="page-hero-title">Một câu chuyện<br /><em>đang được viết</em></h1>
+        <p class="page-hero-desc">
+          Đây là nơi tôi chia sẻ về hành trình, định hướng và những điều tôi quan tâm.
+        </p>
+      </div>
+
+      <!-- Decorative motif line -->
+      <div class="page-hero-motif" aria-hidden="true">
+        <svg viewBox="0 0 1200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 40 Q150 10 300 40 Q450 70 600 40 Q750 10 900 40 Q1050 70 1200 40"
+            stroke="var(--color-jade)" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+          <path d="M0 50 Q150 20 300 50 Q450 80 600 50 Q750 20 900 50 Q1050 80 1200 50"
+            stroke="var(--color-ocean)" stroke-width="1" fill="none" opacity="0.25" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- PERSONAL STORY -->
+    <section class="story-section section">
+      <div class="container story-inner">
+        <div class="story-content">
+          <SectionHeading
+            eyebrow="Câu chuyện cá nhân"
+            title="Tôi là ai"
+          />
+          <div class="story-text">
+            <p>{portfolio.personalStory}</p>
+            <p class="story-interests">{portfolio.interests}</p>
+          </div>
+        </div>
+
+        <div class="story-aside">
+          <!-- Decorative seal / stamp -->
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="80" cy="80" r="70" stroke="var(--color-terracotta)" stroke-width="2" opacity="0.6"/>
+              <circle cx="80" cy="80" r="60" stroke="var(--color-terracotta)" stroke-width="1" opacity="0.3"/>
+              <text x="80" y="72" text-anchor="middle" font-family="serif" font-size="22" fill="var(--color-terracotta)" opacity="0.7" font-style="italic">故</text>
+              <text x="80" y="100" text-anchor="middle" font-family="serif" font-size="11" fill="var(--color-terracotta)" opacity="0.5" letter-spacing="3">JOURNEY</text>
+            </svg>
+          </div>
+
+          <!-- Info card -->
+          <div class="info-card">
+            {portfolio.location && (
+              <div class="info-item">
+                <span class="info-label">Vị trí</span>
+                <span class="info-value">{portfolio.location}</span>
+              </div>
+            )}
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <a href={`mailto:${portfolio.email}`} class="info-value info-link">{portfolio.email}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="values-section section">
+      <div class="container">
+        <SectionHeading
+          eyebrow="Giá trị cốt lõi"
+          title="Những điều tôi tin vào"
+          align="center"
+        />
+
+        <div class="values-grid">
+          {portfolio.values.map((value, i) => (
+            <div class="value-card">
+              <div class="value-number" aria-hidden="true">0{i + 1}</div>
+              <h3 class="value-title">{value.title}</h3>
+              <p class="value-desc">{value.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="skills-section section">
+      <div class="container">
+        <SectionHeading
+          eyebrow="Chuyên môn"
+          title="Kỹ năng & Năng lực"
+        />
+
+        <div class="skills-grid">
+          {portfolio.skills.map((group) => (
+            <div class="skill-group">
+              <h3 class="skill-group-title">{group.group}</h3>
+              <ul class="skill-tags" role="list">
+                {group.items.map((skill) => (
+                  <li class="skill-tag">{skill}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE TIMELINE -->
+    <section class="timeline-section section">
+      <div class="container">
+        <SectionHeading
+          eyebrow="Hành trình"
+          title="Các mốc quan trọng"
+        />
+
+        <div class="timeline">
+          {portfolio.experienceTimeline.map((item, i) => (
+            <div class="timeline-item">
+              <div class="timeline-year">{item.year}</div>
+              <div class="timeline-connector" aria-hidden="true">
+                <span class="timeline-dot"></span>
+                {i < portfolio.experienceTimeline.length - 1 && (
+                  <span class="timeline-line"></span>
+                )}
+              </div>
+              <div class="timeline-content">
+                <h3 class="timeline-title">{item.title}</h3>
+                <p class="timeline-org">{item.organization}</p>
+                <p class="timeline-desc">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="about-cta section">
+      <div class="container about-cta-inner">
+        <div class="about-cta-content">
+          <h2>Hãy kết nối và cùng nhau tạo ra điều gì đó ý nghĩa</h2>
+          <p>Tôi luôn sẵn lòng lắng nghe ý tưởng của bạn.</p>
+        </div>
+        <div class="about-cta-actions">
+          <a href="/contact/" class="btn btn-primary">Liên hệ tôi</a>
+          <a href="/post/" class="btn btn-secondary">Đọc bài viết</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  /* PAGE HERO */
+  .page-hero {
+    position: relative;
+    background: var(--color-paper-deep);
+    padding-block: clamp(3.5rem, 8vw, 5.5rem);
+    overflow: hidden;
+  }
+
+  .page-hero-inner {
+    max-width: 760px;
+  }
+
+  .page-hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-jade);
+    margin-bottom: 1rem;
+    max-width: none;
+  }
+
+  .page-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+  }
+
+  .page-hero-title em {
+    font-style: italic;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-hero-desc {
+    font-size: 1.125rem;
+    color: var(--color-ink-soft);
+    max-width: 56ch;
+  }
+
+  .page-hero-motif {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  /* STORY */
+  .story-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .story-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .story-text p {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: var(--color-ink-soft);
+    max-width: none;
+  }
+
+  .story-interests {
+    font-style: italic;
+    color: var(--color-ink-soft);
+  }
+
+  .story-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .seal svg {
+    width: 140px;
+    height: 140px;
+    animation: seal-spin 30s linear infinite;
+  }
+
+  @keyframes seal-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seal svg { animation: none; }
+  }
+
+  .info-card {
+    background: var(--color-paper-deep);
+    border-radius: 20px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--color-border);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .info-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
+  }
+
+  .info-value {
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+  }
+
+  .info-link {
+    color: var(--color-ocean);
+    text-decoration: none;
+  }
+
+  .info-link:hover {
+    color: var(--color-jade);
+  }
+
+  /* VALUES */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .value-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .value-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .value-number {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--color-jade);
+    opacity: 0.15;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .value-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-bottom: 0.625rem;
+  }
+
+  .value-desc {
+    font-size: 0.9375rem;
+    color: var(--color-ink-soft);
+    line-height: 1.6;
+    max-width: none;
+  }
+
+  /* SKILLS */
+  .skills-section {
+    background: var(--color-paper-deep);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+
+  .skill-group-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
+    margin-bottom: 1rem;
+  }
+
+  .skill-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skill-tag {
+    padding: 0.4rem 0.875rem;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .skill-tag:hover {
+    border-color: var(--color-jade);
+    color: var(--color-jade);
+  }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 760px;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 80px 32px 1fr;
+    gap: 0 1.5rem;
+    min-height: 80px;
+  }
+
+  .timeline-year {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    padding-top: 0.25rem;
+    text-align: right;
+    font-style: italic;
+  }
+
+  .timeline-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+
+  .timeline-line {
+    flex: 1;
+    width: 1.5px;
+    background: var(--color-border);
+    margin-block: 4px;
+  }
+
+  .timeline-content {
+    padding-bottom: 2rem;
+  }
+
+  .timeline-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-org {
+    font-size: 0.875rem;
+    color: var(--color-jade);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    max-width: none;
+  }
+
+  .timeline-desc {
+    font-size: 0.9375rem;
+    color: var(--color-ink-soft);
+    line-height: 1.6;
+    max-width: none;
+  }
+
+  /* ABOUT CTA */
+  .about-cta {
+    background: var(--color-paper-deep);
+  }
+
+  .about-cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .about-cta-content h2 {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .about-cta-content p {
+    color: var(--color-ink-soft);
+    max-width: none;
+  }
+
+  .about-cta-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .story-inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .story-aside {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .seal svg {
+      width: 100px;
+      height: 100px;
+    }
+
+    .about-cta-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

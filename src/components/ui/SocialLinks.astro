@@ -1,0 +1,95 @@
+---
+import { portfolio } from '@/data/portfolio';
+
+interface Props {
+  class?: string;
+  variant?: 'pills' | 'inline' | 'cards';
+}
+
+const {
+  class: className = '',
+  variant = 'pills',
+} = Astro.props;
+---
+
+<div class:list={['social-container', `social-${variant}`, className]}>
+  {portfolio.socialLinks.map((link) => (
+    <a
+      href={link.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="social-link-item"
+      aria-label={link.label}
+    >
+      <span class="social-link-label">{link.label}</span>
+      {variant === 'cards' && <span class="social-link-arrow" aria-hidden="true">↗</span>}
+    </a>
+  ))}
+</div>
+
+<style>
+  .social-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .social-pills .social-link-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .social-pills .social-link-item:hover {
+    border-color: var(--color-ocean);
+    color: var(--color-ocean);
+    background: rgba(0, 129, 167, 0.06);
+  }
+
+  .social-inline .social-link-item {
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .social-inline .social-link-item:hover {
+    color: var(--color-ocean);
+  }
+
+  .social-cards {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .social-cards .social-link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    transition: all var(--transition-fast);
+  }
+
+  .social-cards .social-link-item:hover {
+    border-color: var(--color-ocean);
+    background: rgba(0, 129, 167, 0.05);
+    transform: translateX(4px);
+  }
+
+  .social-link-arrow {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+</style>

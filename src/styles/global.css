@@ -1,0 +1,400 @@
+/* ============================================================
+   GLOBAL CSS — Asian Traditional Portfolio Design System
+   ============================================================ */
+
+/* Tailwind CSS 4 directives */
+@import "tailwindcss";
+
+/* ============================================================
+   Design Tokens — Color System
+   ============================================================ */
+:root {
+  /* Brand palette — extracted from user's image */
+  --color-ocean: #0081A7;
+  --color-jade: #00AFB9;
+  --color-parchment: #FED9B7;
+  --color-terracotta: #F07167;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    125deg,
+    var(--color-ocean) 0%,
+    var(--color-jade) 54%,
+    var(--color-parchment) 100%
+  );
+
+  --gradient-warm: linear-gradient(
+    135deg,
+    var(--color-terracotta) 0%,
+    var(--color-parchment) 58%,
+    var(--color-jade) 100%
+  );
+
+  /* Neutral / Paper tones */
+  --color-paper: #FBF8F2;
+  --color-paper-deep: #F3EDE3;
+  --color-ink: #20343A;
+  --color-ink-soft: #52656A;
+  --color-muted: #7D8989;
+  --color-border: rgba(32, 52, 58, 0.12);
+
+  /* Typography scale */
+  --font-display: 'Noto Serif', 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Be Vietnam Pro', 'Inter', system-ui, sans-serif;
+
+  /* Spacing */
+  --max-width: 1200px;
+  --section-padding-x: clamp(1.25rem, 5vw, 4rem);
+  --section-padding-y: clamp(3rem, 8vw, 6rem);
+
+  /* Border radius */
+  --radius-card: 28px;
+  --radius-btn: 18px;
+  --radius-input: 16px;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 16px rgba(32, 52, 58, 0.08);
+  --shadow-hover: 0 8px 32px rgba(32, 52, 58, 0.14);
+  --shadow-card: 0 1px 4px rgba(32, 52, 58, 0.06), 0 4px 20px rgba(32, 52, 58, 0.08);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 450ms ease;
+}
+
+/* ============================================================
+   Tailwind v4 Custom Utilities / Theme
+   ============================================================ */
+@theme {
+  --color-ocean: #0081A7;
+  --color-jade: #00AFB9;
+  --color-parchment: #FED9B7;
+  --color-terracotta: #F07167;
+  --color-paper: #FBF8F2;
+  --color-paper-deep: #F3EDE3;
+  --color-ink: #20343A;
+  --color-ink-soft: #52656A;
+  --color-muted: #7D8989;
+
+  --font-family-display: 'Noto Serif', 'Georgia', serif;
+  --font-family-body: 'Be Vietnam Pro', system-ui, sans-serif;
+
+  --radius-card: 28px;
+  --radius-btn: 18px;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Paper grain texture overlay (very subtle) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ============================================================
+   Typography
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--color-ink);
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.5rem); }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.75rem); }
+h4 { font-size: 1.25rem; }
+
+p {
+  color: var(--color-ink-soft);
+  max-width: 68ch;
+}
+
+a {
+  color: var(--color-ocean);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-jade);
+}
+
+/* ============================================================
+   Focus styles — Accessibility
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--color-ocean);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.5rem 1rem;
+  background: var(--color-ocean);
+  color: white;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-weight: 600;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ============================================================
+   Layout utilities
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+.section {
+  padding-block: var(--section-padding-y);
+}
+
+/* ============================================================
+   Button styles
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base),
+    color var(--transition-fast);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn:active {
+  transform: scale(0.98) translateY(0);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-ocean);
+  color: var(--color-ocean);
+}
+
+/* ============================================================
+   Cards
+   ============================================================ */
+.card {
+  background: white;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ============================================================
+   Article / Post typography
+   ============================================================ */
+.prose {
+  max-width: 72ch;
+  margin-inline: auto;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.prose h2 {
+  margin-top: 2.5em;
+  margin-bottom: 0.75em;
+}
+
+.prose h3 {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
+  max-width: none;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--color-jade);
+  padding-left: 1.25rem;
+  margin-block: 2em;
+  font-style: italic;
+  color: var(--color-ink-soft);
+}
+
+.prose code {
+  font-size: 0.875em;
+  background: var(--color-paper-deep);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+.prose pre {
+  background: var(--color-ink);
+  color: var(--color-parchment);
+  padding: 1.25rem;
+  border-radius: 16px;
+  overflow-x: auto;
+  margin-block: 1.75em;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.prose img {
+  border-radius: 16px;
+  max-width: 100%;
+  height: auto;
+  margin-block: 1.75em;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5em;
+}
+
+.prose li {
+  margin-bottom: 0.4em;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1.75em;
+  font-size: 0.9375rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--color-paper-deep);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Gradient text utility
+   ============================================================ */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+   Scrollbar styling (subtle)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-paper-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-soft);
+}

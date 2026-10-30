@@ -1,0 +1,89 @@
+---
+interface Props {
+  delay?: number;
+  duration?: number;
+  y?: number;
+  class?: string;
+  as?: string;
+}
+
+const {
+  delay = 0,
+  duration = 600,
+  y = 20,
+  class: className = '',
+  as: Tag = 'div',
+} = Astro.props;
+---
+
+<Tag
+  class:list={['reveal-element', className]}
+  data-reveal-delay={delay}
+  data-reveal-duration={duration}
+  data-reveal-y={y}
+>
+  <slot />
+</Tag>
+
+<style>
+  /* Progressive enhancement: visible by default */
+  .reveal-element {
+    transition-property: opacity, transform;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* When JS initializes observation */
+  :global(html.js-ready) .reveal-element:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 20px));
+  }
+
+  :global(html.js-ready) .reveal-element.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-element,
+    :global(html.js-ready) .reveal-element:not(.is-revealed) {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Mark JS as ready for reveal animations
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-ready');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = el.dataset.revealDelay || '0';
+            const duration = el.dataset.revealDuration || '600';
+            const y = el.dataset.revealY || '20';
+
+            el.style.setProperty('--reveal-y', `${y}px`);
+            el.style.transitionDuration = `${duration}ms`;
+            el.style.transitionDelay = `${delay}ms`;
+
+            el.classList.add('is-revealed');
+            observer.unobserve(el);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    document.querySelectorAll('.reveal-element').forEach((el) => {
+      observer.observe(el);
+    });
+  }
+</script>
