@@ -40,8 +40,8 @@ import { portfolio } from '@/data/portfolio';
       <div class="container story-inner">
         <div class="story-content">
           <SectionHeading
-            eyebrow="Câu chuyện cá nhân"
-            title="Tôi là ai"
+            eyebrow="Hồ sơ cá nhân"
+            title="Về Dương Hoàng Anh Chương"
           />
           <div class="story-text">
             <p>{portfolio.personalStory}</p>
@@ -62,14 +62,14 @@ import { portfolio } from '@/data/portfolio';
 
           <!-- Info card -->
           <div class="info-card">
-            {portfolio.location && (
+            {portfolio.academicInfo.map((item) => (
               <div class="info-item">
-                <span class="info-label">Vị trí</span>
-                <span class="info-value">{portfolio.location}</span>
+                <span class="info-label">{item.label}</span>
+                <span class="info-value">{item.value}</span>
               </div>
-            )}
+            ))}
             <div class="info-item">
-              <span class="info-label">Email</span>
+              <span class="info-label">Email liên hệ</span>
               <a href={`mailto:${portfolio.email}`} class="info-value info-link">{portfolio.email}</a>
             </div>
           </div>
@@ -102,22 +102,30 @@ import { portfolio } from '@/data/portfolio';
     <section class="skills-section section">
       <div class="container">
         <SectionHeading
-          eyebrow="Chuyên môn"
-          title="Kỹ năng & Năng lực"
+          eyebrow="Định hướng chuyên môn"
+          title="Kỹ năng & Nền tảng học tập"
         />
 
-        <div class="skills-grid">
-          {portfolio.skills.map((group) => (
-            <div class="skill-group">
-              <h3 class="skill-group-title">{group.group}</h3>
-              <ul class="skill-tags" role="list">
-                {group.items.map((skill) => (
-                  <li class="skill-tag">{skill}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        {portfolio.skills.length > 0 ? (
+          <div class="skills-grid">
+            {portfolio.skills.map((group) => (
+              <div class="skill-group">
+                <h3 class="skill-group-title">{group.group}</h3>
+                <ul class="skill-tags" role="list">
+                  {group.items.map((skill) => (
+                    <li class="skill-tag">{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="skills-placeholder-card">
+            <p>
+              Các kỹ năng chuyên sâu, ngôn ngữ lập trình và công nghệ thực hành sẽ được cập nhật đồng hành cùng các học phần chuyên ngành trong chương trình đào tạo tại Phân hiệu Cà Mau.
+            </p>
+          </div>
+        )}
       </div>
     </section>
 
@@ -125,8 +133,8 @@ import { portfolio } from '@/data/portfolio';
     <section class="timeline-section section">
       <div class="container">
         <SectionHeading
-          eyebrow="Hành trình"
-          title="Các mốc quan trọng"
+          eyebrow="Hành trình học tập"
+          title="Các mốc đào tạo"
         />
 
         <div class="timeline">
@@ -154,11 +162,11 @@ import { portfolio } from '@/data/portfolio';
     <section class="about-cta section">
       <div class="container about-cta-inner">
         <div class="about-cta-content">
-          <h2>Hãy kết nối và cùng nhau tạo ra điều gì đó ý nghĩa</h2>
-          <p>Tôi luôn sẵn lòng lắng nghe ý tưởng của bạn.</p>
+          <h2>Cùng kết nối và trao đổi học tập</h2>
+          <p>Mình luôn trân trọng những lời chia sẻ, góp ý từ thầy cô, bạn bè và anh chị đi trước.</p>
         </div>
         <div class="about-cta-actions">
-          <a href="/contact/" class="btn btn-primary">Liên hệ tôi</a>
+          <a href="/contact/" class="btn btn-primary">Liên hệ</a>
           <a href="/post/" class="btn btn-secondary">Đọc bài viết</a>
         </div>
       </div>
@@ -404,6 +412,23 @@ import { portfolio } from '@/data/portfolio';
   .skill-tag:hover {
     border-color: var(--color-jade);
     color: var(--color-jade);
+  }
+
+  .skills-placeholder-card {
+    background: white;
+    border-radius: var(--radius-card);
+    padding: 2.5rem;
+    border: 1px dashed var(--color-border);
+    text-align: center;
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  .skills-placeholder-card p {
+    font-size: 1rem;
+    color: var(--color-ink-soft);
+    line-height: 1.7;
+    margin-inline: auto;
   }
 
   /* TIMELINE */

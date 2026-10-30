@@ -4,6 +4,7 @@ import SiteHeader from '@/components/layout/SiteHeader.astro';
 import SiteFooter from '@/components/layout/SiteFooter.astro';
 import PostCard from '@/components/ui/PostCard.astro';
 import { getCollection } from 'astro:content';
+import { portfolio } from '@/data/portfolio';
 
 const allPosts = await getCollection('posts', ({ data }) => !data.draft);
 const sortedPosts = allPosts.sort(
@@ -24,7 +25,7 @@ function getReadingTime(body: string): number {
 
 <BaseLayout
   title="Bài viết"
-  description="Những ghi chép, suy nghĩ và kinh nghiệm từ hành trình của tôi."
+  description={`Nhật ký học tập, ghi chép và chia sẻ kiến thức của ${portfolio.name}.`}
 >
   <SiteHeader />
 
@@ -33,9 +34,9 @@ function getReadingTime(body: string): number {
     <!-- PAGE HERO -->
     <section class="page-hero section">
       <div class="container">
-        <p class="eyebrow">Bài viết</p>
+        <p class="eyebrow">Nhật ký học tập</p>
         <h1 class="page-title">Chia sẻ & Suy nghĩ</h1>
-        <p class="page-desc">Những ghi chép về hành trình, kinh nghiệm và góc nhìn của tôi.</p>
+        <p class="page-desc">Những ghi chép về hành trình học tập, bài tập thực hành và góc nhìn công nghệ của mình.</p>
       </div>
     </section>
 

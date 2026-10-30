@@ -21,7 +21,7 @@ const hasFormEndpoint = !!portfolio.formEndpoint;
         <p class="eyebrow">Liên hệ</p>
         <h1 class="page-title">Hãy bắt đầu<br /><em>cuộc trò chuyện</em></h1>
         <p class="page-desc">
-          Tôi luôn mở lòng với những dự án thú vị, cơ hội hợp tác hoặc đơn giản là một cuộc trò chuyện thú vị.
+          Mình luôn sẵn lòng đón nhận những chia sẻ, góp ý và trao đổi từ thầy cô, bạn bè và những người quan tâm đến công nghệ.
         </p>
       </div>
     </section>
@@ -49,9 +49,16 @@ const hasFormEndpoint = !!portfolio.formEndpoint;
             </div>
           </div>
 
+          <!-- Location & Education -->
+          <div class="contact-block">
+            <h2 class="contact-block-title">Địa điểm & Đơn vị</h2>
+            <p class="contact-location">{portfolio.institution} — {portfolio.location}</p>
+            <p class="contact-sub">Niên khóa {portfolio.academicYears} · Ngành {portfolio.major}</p>
+          </div>
+
           <!-- Social links -->
           <div class="contact-block">
-            <h2 class="contact-block-title">Mạng xã hội</h2>
+            <h2 class="contact-block-title">Mạng xã hội & Mã nguồn</h2>
             <div class="social-list">
               {portfolio.socialLinks.map((link) => (
                 <a
@@ -86,11 +93,9 @@ const hasFormEndpoint = !!portfolio.formEndpoint;
           {!hasFormEndpoint && (
             <div class="form-notice" role="alert">
               <p>
-                <strong>Lưu ý:</strong> Form chưa được cấu hình endpoint. Hãy đặt biến môi trường
-                <code>PUBLIC_FORMSPREE_ENDPOINT</code> với URL từ <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree</a>.
-                Trong lúc đó, bạn có thể liên hệ trực tiếp qua email.
+                Hệ thống tiếp nhận form trực tuyến đang được cấu hình. Bạn có thể gửi thư trực tiếp đến địa chỉ email <strong>{portfolio.email}</strong>.
               </p>
-              <a href={`mailto:${portfolio.email}?subject=Liên hệ qua portfolio`} class="btn btn-primary mailto-fallback">
+              <a href={`mailto:${portfolio.email}?subject=Liên hệ qua portfolio - Dương Hoàng Anh Chương`} class="btn btn-primary mailto-fallback">
                 Gửi email trực tiếp
               </a>
             </div>
@@ -268,6 +273,18 @@ const hasFormEndpoint = !!portfolio.formEndpoint;
     letter-spacing: 0.12em;
     color: var(--color-muted);
     margin-bottom: 0.75rem;
+  }
+
+  .contact-location {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-sub {
+    font-size: 0.8125rem;
+    color: var(--color-ink-soft);
   }
 
   .email-actions {
