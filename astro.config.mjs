@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 // ChuongDHA.github.io is a User Pages site → base = '/'
 
 export default defineConfig({
-  site: 'https://ChuongDHA.github.io',
+  site: 'https://chuongdha.github.io',
   base: '/',
   output: 'static',
   integrations: [

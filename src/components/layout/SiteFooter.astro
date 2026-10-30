@@ -6,6 +6,11 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
+  <!-- Decorative SVG wave -->
+  <svg class="footer-wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M0 30 Q360 0 720 30 Q1080 60 1440 30 L1440 60 L0 60 Z" fill="var(--color-paper-deep)" opacity="0.5"/>
+  </svg>
+
   <div class="container">
     <div class="footer-inner">
       <!-- Brand -->
@@ -60,11 +65,6 @@ const currentYear = new Date().getFullYear();
   </div>
 </footer>
 
-<!-- Decorative SVG wave -->
-<svg class="footer-wave" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path d="M0 30 Q360 0 720 30 Q1080 60 1440 30 L1440 60 L0 60 Z" fill="var(--color-paper-deep)" opacity="0.5"/>
-</svg>
-
 <style>
   .site-footer {
     background: var(--color-ink);
@@ -76,11 +76,14 @@ const currentYear = new Date().getFullYear();
 
   .footer-wave {
     position: absolute;
-    top: -30px;
+    top: -29px;
     left: 0;
     width: 100%;
+    max-width: 100%;
     height: 30px;
     pointer-events: none;
+    display: block;
+    overflow: hidden;
   }
 
   .footer-inner {

@@ -1,8 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '@/layouts/ArticleLayout.astro';
-import SiteHeader from '@/components/layout/SiteHeader.astro';
-import SiteFooter from '@/components/layout/SiteFooter.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -60,10 +58,7 @@ const relatedPosts = allPosts
   updatedDate={updatedDate}
   tags={tags}
 >
-  <SiteHeader />
-
-  <main id="main-content">
-    <article class="article-page">
+  <article class="article-page">
 
       <!-- Article header -->
       <header class="article-header">
@@ -156,9 +151,6 @@ const relatedPosts = allPosts
       </div>
 
     </article>
-  </main>
-
-  <SiteFooter />
 </ArticleLayout>
 
 <style>

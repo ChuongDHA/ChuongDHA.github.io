@@ -11,7 +11,6 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.19",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.3.0",
     "astro": "^5.7.0",
