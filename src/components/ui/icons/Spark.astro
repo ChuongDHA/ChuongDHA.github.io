@@ -1,0 +1,26 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<svg
+  class:list={['spark', className]}
+  aria-hidden="true"
+  viewBox="0 0 60 60"
+  fill="currentColor"
+>
+  <path d="M30 0c1.7 19.6 10.4 28.3 30 30-19.6 1.7-28.3 10.4-30 30C28.3 40.4 19.6 31.7 0 30 19.6 28.3 28.3 19.6 30 0Z" />
+</svg>
+
+<style>
+  .spark {
+    display: inline-block;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+</style>

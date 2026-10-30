@@ -1,0 +1,10 @@
+{
+  "description": "A vibrant pop art portfolio showcases creative work with bold colors and playful retro visuals, helping artists make a memorable impression.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

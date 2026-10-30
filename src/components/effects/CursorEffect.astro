@@ -1,0 +1,199 @@
+---
+// CursorEffect.astro - Smooth ambient mouse glow & interactive cursor
+---
+
+<div id="ambient-mouse-glow" class="ambient-mouse-glow" aria-hidden="true"></div>
+<div id="custom-cursor-dot" class="custom-cursor-dot" aria-hidden="true"></div>
+<div id="custom-cursor-ring" class="custom-cursor-ring" aria-hidden="true"></div>
+
+<style>
+  /* Ambient radial spotlight following cursor */
+  .ambient-mouse-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 600ms ease;
+    background: radial-gradient(
+      650px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+      rgba(0, 175, 185, 0.08),
+      transparent 55%
+    );
+  }
+
+  [data-theme="dark"] .ambient-mouse-glow {
+    background: radial-gradient(
+      700px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+      rgba(0, 175, 185, 0.12),
+      transparent 60%
+    );
+  }
+
+  .ambient-mouse-glow.active {
+    opacity: 1;
+  }
+
+  /* Custom cursor elements */
+  .custom-cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--color-ocean, #0081A7);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 250ms ease, transform 120ms ease, background-color 200ms ease;
+  }
+
+  [data-theme="dark"] .custom-cursor-dot {
+    background: var(--color-jade, #00AFB9);
+    box-shadow: 0 0 10px rgba(0, 175, 185, 0.8);
+  }
+
+  .custom-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--color-ocean, #0081A7);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition:
+      opacity 250ms ease,
+      width 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      height 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 220ms ease,
+      border-color 200ms ease;
+  }
+
+  [data-theme="dark"] .custom-cursor-ring {
+    border-color: rgba(0, 175, 185, 0.55);
+  }
+
+  .custom-cursor-dot.visible,
+  .custom-cursor-ring.visible {
+    opacity: 1;
+  }
+
+  /* Hover state on interactive elements */
+  .custom-cursor-ring.hovering {
+    width: 52px;
+    height: 52px;
+    background-color: rgba(0, 175, 185, 0.12);
+    border-color: var(--color-jade, #00AFB9);
+  }
+
+  .custom-cursor-dot.hovering {
+    transform: translate(-50%, -50%) scale(1.4);
+    background-color: var(--color-jade, #00AFB9);
+  }
+
+  /* Hide on touch devices */
+  @media (hover: none), (pointer: coarse) {
+    .ambient-mouse-glow,
+    .custom-cursor-dot,
+    .custom-cursor-ring {
+      display: none !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    // Only run on devices that support hover
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    const glow = document.getElementById('ambient-mouse-glow');
+    const dot = document.getElementById('custom-cursor-dot');
+    const ring = document.getElementById('custom-cursor-ring');
+
+    if (!glow || !dot || !ring) return;
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    let isVisible = false;
+
+    // Track mouse position
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      if (!isVisible) {
+        isVisible = true;
+        glow.classList.add('active');
+        dot.classList.add('visible');
+        ring.classList.add('visible');
+      }
+
+      // Update ambient glow position directly
+      document.documentElement.style.setProperty('--mouse-x', mouseX + 'px');
+      document.documentElement.style.setProperty('--mouse-y', mouseY + 'px');
+
+      // Place dot instantly
+      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+    }, { passive: true });
+
+    // Smooth lagging ring with requestAnimationFrame
+    function renderRing() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+      requestAnimationFrame(renderRing);
+    }
+    requestAnimationFrame(renderRing);
+
+    // Mouse leave / enter window
+    document.addEventListener('mouseleave', function() {
+      glow.classList.remove('active');
+      dot.classList.remove('visible');
+      ring.classList.remove('visible');
+      isVisible = false;
+    });
+
+    document.addEventListener('mouseenter', function() {
+      glow.classList.add('active');
+      dot.classList.add('visible');
+      ring.classList.add('visible');
+      isVisible = true;
+    });
+
+    // Expand cursor ring on clickable elements
+    const interactiveSelectors = 'a, button, input, textarea, select, [role="button"], .post-card, .project-card, .value-card, .feature-card, .button, .tape, .theme-button, .filter-btn, .contact-detail-card, .academic-row, .timeline-card, .art-card, .social-chip, .copy-icon-btn, .search-input, .post-item, .nav-link, .brand';
+
+    document.addEventListener('mouseover', function(e) {
+      const target = e.target;
+      if (target && target.closest && target.closest(interactiveSelectors)) {
+        ring.classList.add('hovering');
+        dot.classList.add('hovering');
+      }
+    });
+
+    document.addEventListener('mouseout', function(e) {
+      const target = e.target;
+      if (target && target.closest && target.closest(interactiveSelectors)) {
+        ring.classList.remove('hovering');
+        dot.classList.remove('hovering');
+      }
+    });
+
+    // Click effect (subtle compression)
+    document.addEventListener('mousedown', function() {
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(0.85)`;
+    });
+
+    document.addEventListener('mouseup', function() {
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(1)`;
+    });
+  })();
+</script>

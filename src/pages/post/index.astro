@@ -3,6 +3,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SiteHeader from '@/components/layout/SiteHeader.astro';
 import SiteFooter from '@/components/layout/SiteFooter.astro';
 import PostCard from '@/components/ui/PostCard.astro';
+import SectionLabel from '@/components/ui/SectionLabel.astro';
+import Spark from '@/components/ui/icons/Spark.astro';
+import Flower from '@/components/ui/icons/Flower.astro';
+import ArrowIcon from '@/components/ui/icons/ArrowIcon.astro';
 import { getCollection } from 'astro:content';
 import { portfolio } from '@/data/portfolio';
 
@@ -11,12 +15,12 @@ const sortedPosts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-const featuredPosts = sortedPosts.filter((p) => p.data.featured);
-const regularPosts = sortedPosts.filter((p) => !p.data.featured);
+const featuredPost = sortedPosts.find((p) => p.data.featured) || sortedPosts[0];
 
-// Collect all unique categories and tags for filter UI
-const categories = [...new Set(sortedPosts.map((p) => p.data.category).filter(Boolean))];
-const allTags = [...new Set(sortedPosts.flatMap((p) => p.data.tags))].slice(0, 20);
+// Extract distinct categories
+const detectedCategories = [...new Set(sortedPosts.map((p) => p.data.category).filter(Boolean))] as string[];
+const defaultCategories = ['Học tập', 'Khám phá', 'Ghi chú'];
+const allCategories = ['Tất cả', ...new Set([...detectedCategories, ...defaultCategories])];
 
 function getReadingTime(body: string): number {
   return Math.ceil(body.split(/\s+/).length / 200);
@@ -24,144 +28,139 @@ function getReadingTime(body: string): number {
 ---
 
 <BaseLayout
-  title="Bài viết"
-  description={`Nhật ký học tập, ghi chép và chia sẻ kiến thức của ${portfolio.name}.`}
+  title="Nhật ký học tập"
+  description={`Các bài viết, ghi chép học tập và suy nghĩ của ${portfolio.name} — Sinh viên Công nghệ thông tin Phân hiệu Cà Mau.`}
 >
   <SiteHeader />
 
-  <main id="main-content">
+  <main id="main-content" class="route-page">
 
-    <!-- PAGE HERO -->
-    <section class="page-hero section">
+    <!-- ===== PAGE HERO ===== -->
+    <section class="journal-hero section-pad">
       <div class="container">
-        <p class="eyebrow">Nhật ký học tập</p>
-        <h1 class="page-title">Chia sẻ & Suy nghĩ</h1>
-        <p class="page-desc">Những ghi chép về hành trình học tập, bài tập thực hành và góc nhìn công nghệ của mình.</p>
-      </div>
-    </section>
+        <SectionLabel index="03">Digital Journal</SectionLabel>
 
-    <!-- FILTER + SEARCH -->
-    <section class="filter-section">
-      <div class="container">
-        <div class="filter-bar">
-          <!-- Search -->
+        <div class="section-title-wrap">
+          <h1 class="editorial-title">
+            Ghi chép từ
+            <br />
+            <em>một tâm trí tò mò.</em>
+          </h1>
+          <p class="section-subtitle">
+            Một góc nhỏ dành cho các ghi chú học tập, kiến thức công nghệ mới và các cột mốc trong quá trình theo học tại {portfolio.institution}.
+          </p>
+        </div>
+
+        <!-- Filter Pills & Search Bar -->
+        <div class="journal-controls">
+          <div class="filters" id="category-filters" role="tablist" aria-label="Lọc theo chuyên mục">
+            {allCategories.map((cat, idx) => (
+              <button
+                type="button"
+                class:list={['filter-btn', { active: idx === 0 }]}
+                data-category={cat === 'Tất cả' ? 'all' : cat}
+                role="tab"
+                aria-selected={idx === 0 ? 'true' : 'false'}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
           <div class="search-wrap">
-            <label for="post-search" class="sr-only">Tìm kiếm bài viết</label>
             <input
               type="search"
-              id="post-search"
-              placeholder="Tìm kiếm bài viết..."
+              id="search-input"
               class="search-input"
+              placeholder="Tìm bài viết theo từ khóa..."
               aria-label="Tìm kiếm bài viết"
               autocomplete="off"
             />
             <span class="search-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
               </svg>
             </span>
           </div>
-
-          <!-- Category filter -->
-          {categories.length > 0 && (
-            <div class="filter-pills" role="group" aria-label="Lọc theo chuyên mục">
-              <button class="filter-pill filter-pill--active" data-filter="all">Tất cả</button>
-              {categories.map((cat) => (
-                <button class="filter-pill" data-filter={cat}>{cat}</button>
-              ))}
-            </div>
-          )}
         </div>
 
-        <!-- Tags -->
-        {allTags.length > 0 && (
-          <div class="tag-cloud" role="group" aria-label="Lọc theo tag">
-            {allTags.map((tag) => (
-              <button class="tag-btn" data-tag={tag}>{tag}</button>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-
-    <!-- POSTS GRID -->
-    <section class="posts-section section">
-      <div class="container">
-
-        <!-- Featured -->
-        {featuredPosts.length > 0 && (
-          <div class="featured-posts posts-grid" id="posts-grid">
-            {featuredPosts.map((post) => (
-              <PostCard
-                title={post.data.title}
-                description={post.data.description}
-                cover={post.data.cover}
-                coverAlt={post.data.coverAlt}
-                category={post.data.category}
-                tags={post.data.tags}
-                pubDate={post.data.pubDate}
-                slug={post.id}
-                featured={true}
-                readingTime={getReadingTime(post.body ?? '')}
-              />
-            ))}
-          </div>
-        )}
-
-        <!-- All posts -->
-        <div class="posts-grid" id="posts-grid-main">
-          {regularPosts.map((post) => (
-            <article
-              class="post-card-wrapper"
-              data-title={post.data.title.toLowerCase()}
-              data-desc={post.data.description.toLowerCase()}
-              data-category={post.data.category?.toLowerCase() ?? ''}
-              data-tags={post.data.tags.join(',').toLowerCase()}
-            >
-              <PostCard
-                title={post.data.title}
-                description={post.data.description}
-                cover={post.data.cover}
-                coverAlt={post.data.coverAlt}
-                category={post.data.category}
-                tags={post.data.tags}
-                pubDate={post.data.pubDate}
-                slug={post.id}
-                readingTime={getReadingTime(post.body ?? '')}
-              />
-            </article>
-          ))}
-
-          <!-- Empty state -->
-          {sortedPosts.length === 0 && (
-            <div class="empty-state">
-              <div class="empty-icon" aria-hidden="true">
-                <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="40" cy="40" r="35" stroke="var(--color-jade)" stroke-width="1.5" opacity="0.4"/>
-                  <path d="M25 42 Q40 28 55 42" stroke="var(--color-ocean)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                  <line x1="30" y1="35" x2="30" y2="35" stroke="var(--color-ink-soft)" stroke-width="2" stroke-linecap="round"/>
-                  <line x1="50" y1="35" x2="50" y2="35" stroke="var(--color-ink-soft)" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+        <!-- Featured Note / Feature Card from Reference -->
+        {featuredPost && (
+          <div class="featured-block" id="featured-block" data-category={featuredPost.data.category || 'all'} data-title={featuredPost.data.title.toLowerCase()} data-desc={featuredPost.data.description.toLowerCase()}>
+            <article class="feature-card">
+              <div class="feature-visual" aria-hidden="true">
+                <span class="coming-sticker">{featuredPost.data.category || 'NỔI BẬT'}</span>
+                <Flower class="feature-flower" />
+                <div class="feature-type">
+                  <span>MỚI</span>
+                  <em>GHI CHÉP</em>
+                </div>
               </div>
-              <h2>Chưa có bài viết nào</h2>
-              <p>Hãy tạo bài viết đầu tiên qua Pages CMS hoặc thêm file Markdown vào <code>src/content/posts/</code>.</p>
-            </div>
-          )}
-        </div>
 
-        <!-- No results state (hidden by default, shown by JS) -->
-        <div class="no-results" id="no-results" hidden aria-live="polite">
-          <div class="empty-icon" aria-hidden="true">
-            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="35" stroke="var(--color-jade)" stroke-width="1.5" opacity="0.4"/>
-              <path d="M28 52 Q40 38 52 52" stroke="var(--color-terracotta)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-              <line x1="30" y1="34" x2="30" y2="34" stroke="var(--color-ink-soft)" stroke-width="2" stroke-linecap="round"/>
-              <line x1="50" y1="34" x2="50" y2="34" stroke="var(--color-ink-soft)" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+              <div class="card-copy">
+                <div class="card-meta">
+                  <span>Bài viết nổi bật · {featuredPost.data.category || 'Học tập'}</span>
+                  <span class="card-read-time">{getReadingTime(featuredPost.body ?? '')} phút đọc</span>
+                </div>
+                <h3>
+                  <a href={`/post/${featuredPost.id}/`}>{featuredPost.data.title}</a>
+                </h3>
+                <p>{featuredPost.data.description}</p>
+                <div class="card-action">
+                  <a href={`/post/${featuredPost.id}/`} class="button button-primary">
+                    <span>Đọc bài viết này</span>
+                    <ArrowIcon />
+                  </a>
+                </div>
+              </div>
+            </article>
           </div>
-          <h2>Không tìm thấy bài viết</h2>
-          <p>Hãy thử từ khóa khác hoặc xóa bộ lọc.</p>
-          <button class="btn btn-secondary" id="reset-filters">Xóa bộ lọc</button>
+        )}
+
+        <!-- Posts Grid -->
+        <div class="posts-grid-wrap">
+          <h2 class="posts-grid-title" id="posts-subheading">Tất cả bài viết</h2>
+
+          <div class="posts-grid" id="posts-grid">
+            {sortedPosts.map((post) => (
+              <div
+                class="post-item"
+                data-category={post.data.category || 'all'}
+                data-title={post.data.title.toLowerCase()}
+                data-desc={post.data.description.toLowerCase()}
+                data-tags={post.data.tags.join(',').toLowerCase()}
+              >
+                <PostCard
+                  title={post.data.title}
+                  description={post.data.description}
+                  cover={post.data.cover}
+                  coverAlt={post.data.coverAlt}
+                  category={post.data.category}
+                  tags={post.data.tags}
+                  pubDate={post.data.pubDate}
+                  slug={post.id}
+                  readingTime={getReadingTime(post.body ?? '')}
+                />
+              </div>
+            ))}
+          </div>
+
+          <!-- Empty State Card (Reference Inspired) -->
+          <div class="empty-card" id="empty-state" style="display: none;">
+            <div class="empty-icon">
+              <Spark />
+              <span>00</span>
+            </div>
+            <div class="empty-content">
+              <span class="empty-tag">Không tìm thấy</span>
+              <h3>Chưa có bài viết phù hợp với tiêu chí lọc.</h3>
+              <p>Hãy thử tìm với từ khóa khác hoặc chọn xem lại tất cả bài viết.</p>
+              <button type="button" class="button button-secondary" id="reset-filter-btn">
+                <span>Xem tất cả</span>
+                <ArrowIcon />
+              </button>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -172,305 +171,610 @@ function getReadingTime(body: string): number {
   <SiteFooter />
 </BaseLayout>
 
+<script is:inline>
+  (function() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('search-input');
+    const postItems = document.querySelectorAll('.post-item');
+    const featuredBlock = document.getElementById('featured-block');
+    const emptyState = document.getElementById('empty-state');
+    const resetBtn = document.getElementById('reset-filter-btn');
+
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      let visibleCount = 0;
+
+      // Filter grid posts
+      postItems.forEach(item => {
+        const itemCat = item.getAttribute('data-category') || '';
+        const itemTitle = item.getAttribute('data-title') || '';
+        const itemDesc = item.getAttribute('data-desc') || '';
+        const itemTags = item.getAttribute('data-tags') || '';
+
+        const matchesCat = currentCategory === 'all' || itemCat.toLowerCase() === currentCategory.toLowerCase();
+        const matchesSearch = !searchQuery ||
+          itemTitle.includes(searchQuery) ||
+          itemDesc.includes(searchQuery) ||
+          itemTags.includes(searchQuery);
+
+        if (matchesCat && matchesSearch) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      // Filter featured block
+      if (featuredBlock) {
+        const featCat = featuredBlock.getAttribute('data-category') || '';
+        const featTitle = featuredBlock.getAttribute('data-title') || '';
+        const featDesc = featuredBlock.getAttribute('data-desc') || '';
+
+        const featMatchesCat = currentCategory === 'all' || featCat.toLowerCase() === currentCategory.toLowerCase();
+        const featMatchesSearch = !searchQuery ||
+          featTitle.includes(searchQuery) ||
+          featDesc.includes(searchQuery);
+
+        if (featMatchesCat && featMatchesSearch) {
+          featuredBlock.style.display = '';
+        } else {
+          featuredBlock.style.display = 'none';
+        }
+      }
+
+      // Show/hide empty state
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.style.display = 'flex';
+        } else {
+          emptyState.style.display = 'none';
+        }
+      }
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
+        currentCategory = this.getAttribute('data-category') || 'all';
+        applyFilters();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        searchQuery = this.value.trim().toLowerCase();
+        applyFilters();
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        currentCategory = 'all';
+        searchQuery = '';
+        if (searchInput) searchInput.value = '';
+        filterBtns.forEach((b, idx) => {
+          if (idx === 0) {
+            b.classList.add('active');
+            b.setAttribute('aria-selected', 'true');
+          } else {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          }
+        });
+        applyFilters();
+      });
+    }
+  })();
+</script>
+
 <style>
-  /* PAGE HERO */
-  .page-hero {
-    background: var(--color-paper-deep);
-    padding-block: clamp(3rem, 7vw, 5rem);
+  .journal-hero {
+    padding-top: 130px;
+    background:
+      radial-gradient(circle at 10% 45%, rgba(0, 175, 185, 0.15), transparent 28%),
+      var(--bg-primary);
   }
 
-  .eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--color-jade);
-    margin-bottom: 0.75rem;
-    max-width: none;
+  .section-pad {
+    padding-bottom: clamp(80px, 10vw, 130px);
   }
 
-  .page-title {
+  .section-title-wrap {
+    display: grid;
+    grid-template-columns: 1.5fr 0.8fr;
+    gap: clamp(30px, 5vw, 70px);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 64px);
+  }
+
+  .editorial-title {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 400;
-    margin-bottom: 0.75rem;
+    font-size: clamp(44px, 6.5vw, 84px);
+    font-weight: 800;
+    letter-spacing: -0.06em;
+    line-height: 0.88;
+    color: var(--text-primary);
   }
 
-  .page-desc {
-    font-size: 1.0625rem;
-    color: var(--color-ink-soft);
-    max-width: 52ch;
+  .editorial-title em {
+    color: var(--color-ocean);
+    font-weight: 600;
   }
 
-  /* FILTER */
-  .filter-section {
-    padding-block: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-paper);
-    position: sticky;
-    top: 68px;
-    z-index: 50;
+  [data-theme="dark"] .editorial-title em {
+    color: var(--color-jade);
   }
 
-  .filter-bar {
+  .section-subtitle {
+    font-size: 14.5px;
+    line-height: 1.65;
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  /* ============================================================
+     CONTROLS: FILTERS & SEARCH
+     ============================================================ */
+  .journal-controls {
     display: flex;
-    align-items: center;
-    gap: 1rem;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filter-btn {
+    min-height: 40px;
+    padding: 0 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .filter-btn:hover {
+    color: var(--color-ocean);
+    border-color: var(--color-ocean);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 129, 167, 0.12);
+  }
+
+  .filter-btn.active {
+    background: var(--color-ocean);
+    color: var(--color-white);
+    border-color: var(--color-ocean);
+    box-shadow: 0 4px 14px rgba(0, 129, 167, 0.25);
+    transform: translateY(-1px);
+  }
+
+  [data-theme="dark"] .filter-btn:hover {
+    color: var(--color-jade);
+    border-color: var(--color-jade);
+    box-shadow: 0 4px 12px rgba(0, 175, 185, 0.2);
+  }
+
+  [data-theme="dark"] .filter-btn.active {
+    background: var(--color-jade);
+    color: var(--color-ink);
+    border-color: var(--color-jade);
+    box-shadow: 0 4px 16px rgba(0, 175, 185, 0.35);
   }
 
   .search-wrap {
     position: relative;
-    flex: 1;
-    min-width: 200px;
-    max-width: 360px;
+    width: min(100%, 320px);
   }
 
   .search-input {
     width: 100%;
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
-    border: 1.5px solid var(--color-border);
-    border-radius: var(--radius-input);
-    font-family: var(--font-body);
-    font-size: 0.9375rem;
-    color: var(--color-ink);
-    background: white;
+    min-height: 42px;
+    padding: 0 40px 0 16px;
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 12.5px;
+    outline: none;
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   }
 
   .search-input:focus {
-    outline: none;
     border-color: var(--color-ocean);
-    box-shadow: 0 0 0 3px rgba(0, 129, 167, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 129, 167, 0.2);
   }
 
-  .search-input::placeholder {
-    color: var(--color-muted);
+  [data-theme="dark"] .search-input:focus {
+    border-color: var(--color-jade);
+    box-shadow: 0 0 0 3px rgba(0, 175, 185, 0.25);
   }
 
   .search-icon {
     position: absolute;
-    left: 0.75rem;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--color-muted);
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
     pointer-events: none;
   }
 
-  .filter-pills {
+  .search-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ============================================================
+     FEATURED CARD (REFERENCE INSPIRED)
+     ============================================================ */
+  .featured-block {
+    margin-bottom: 56px;
+  }
+
+  .feature-card {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    overflow: hidden;
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: 32px;
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .feature-visual {
+    position: relative;
     display: flex;
-    gap: 0.375rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 340px;
+    overflow: hidden;
+    border-right: var(--border-width) solid var(--border-strong);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(254, 217, 183, 0.45) 0%, transparent 65%),
+      linear-gradient(135deg, #f7f3ee 0%, #edf6f8 100%);
   }
 
-  .filter-pill {
-    padding: 0.4rem 0.875rem;
-    border-radius: 20px;
-    border: 1.5px solid var(--color-border);
-    background: white;
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--color-ink-soft);
-    cursor: pointer;
-    transition: all var(--transition-fast);
+  [data-theme="dark"] .feature-visual {
+    background:
+      radial-gradient(circle at 50% 50%, rgba(0, 175, 185, 0.2) 0%, transparent 70%),
+      linear-gradient(135deg, #13171e 0%, #1a222c 100%);
   }
 
-  .filter-pill:hover {
-    border-color: var(--color-ocean);
+  .feature-visual::before {
+    position: absolute;
+    inset: 16%;
+    border: 1px dashed rgba(0, 129, 167, 0.25);
+    border-radius: 50%;
+    content: '';
+    transition: transform 1.2s ease;
+  }
+
+  .feature-visual::after {
+    position: absolute;
+    inset: 30%;
+    border: 1px solid rgba(0, 175, 185, 0.3);
+    border-radius: 50%;
+    content: '';
+  }
+
+  [data-theme="dark"] .feature-visual::before {
+    border-color: rgba(0, 175, 185, 0.3);
+  }
+
+  [data-theme="dark"] .feature-visual::after {
+    border-color: rgba(254, 217, 183, 0.2);
+  }
+
+  .feature-card:hover .feature-visual::before {
+    transform: rotate(45deg);
+  }
+
+  .coming-sticker {
+    position: absolute;
+    z-index: 3;
+    top: 22px;
+    left: 22px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--color-ocean);
+    color: var(--color-white);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 129, 167, 0.25);
+  }
+
+  [data-theme="dark"] .coming-sticker {
+    background: var(--color-jade);
+    color: #0c1015;
+    box-shadow: 0 2px 10px rgba(0, 175, 185, 0.35);
+  }
+
+  .feature-flower {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    color: var(--color-ocean);
+    opacity: 0.12;
+    transform: rotate(15deg);
+    transition: transform 800ms ease, opacity 300ms ease;
+  }
+
+  [data-theme="dark"] .feature-flower {
+    color: var(--color-jade);
+    opacity: 0.18;
+  }
+
+  .feature-card:hover .feature-flower {
+    transform: rotate(35deg) scale(1.08);
+    opacity: 0.22;
+  }
+
+  .feature-type {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+  }
+
+  .feature-type span {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
     color: var(--color-ocean);
   }
 
-  .filter-pill--active {
-    background: var(--color-ocean);
-    border-color: var(--color-ocean);
-    color: white;
-  }
-
-  .tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    margin-top: 0.75rem;
-  }
-
-  .tag-btn {
-    padding: 0.25rem 0.7rem;
-    border-radius: 20px;
-    border: 1px solid var(--color-border);
-    background: transparent;
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    color: var(--color-muted);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-  }
-
-  .tag-btn:hover,
-  .tag-btn--active {
-    border-color: var(--color-jade);
+  [data-theme="dark"] .feature-type span {
     color: var(--color-jade);
-    background: rgba(0, 175, 185, 0.08);
   }
 
-  /* POSTS GRID */
-  .posts-section {
-    padding-top: 2.5rem;
+  .feature-type em {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    font-style: normal;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  .card-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(32px, 5vw, 48px);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ocean);
+  }
+
+  [data-theme="dark"] .card-meta {
+    color: var(--color-jade);
+  }
+
+  .card-copy h3 {
+    margin: 0 0 14px;
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.2vw, 36px);
+    line-height: 1.15;
+  }
+
+  .card-copy h3 a {
+    color: var(--text-primary);
+    transition: color var(--transition-fast);
+  }
+
+  .card-copy h3 a:hover {
+    color: var(--color-ocean);
+  }
+
+  [data-theme="dark"] .card-copy h3 a:hover {
+    color: var(--color-jade);
+  }
+
+  .card-copy p {
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0 0 28px;
+    color: var(--text-secondary);
+  }
+
+  .card-action {
+    display: flex;
+  }
+
+  /* ============================================================
+     POSTS GRID
+     ============================================================ */
+  .posts-grid-wrap {
+    margin-top: 40px;
+  }
+
+  .posts-grid-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 28px;
   }
 
   .posts-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
   }
 
-  .post-card-wrapper {
-    transition: opacity var(--transition-base);
+  .post-item {
+    transition: transform var(--transition-base);
   }
 
-  .post-card-wrapper[hidden] {
-    display: none;
+  .post-item:hover {
+    transform: translateY(-4px);
   }
 
-  /* Empty / No results state */
-  .empty-state,
-  .no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 4rem 2rem;
+  /* ============================================================
+     EMPTY CARD (REFERENCE INSPIRED)
+     ============================================================ */
+  .empty-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    justify-content: space-between;
+    padding: clamp(32px, 5vw, 48px);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-card);
+    min-height: 280px;
   }
 
-  .empty-icon svg {
-    width: 80px;
-    height: 80px;
+  [data-theme="dark"] .empty-card {
+    background: var(--bg-surface-alt);
+    color: var(--text-primary);
   }
 
-  .empty-state h2,
-  .no-results h2 {
-    font-size: 1.375rem;
+  .empty-icon {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
   }
 
-  .empty-state p,
-  .no-results p {
-    color: var(--color-ink-soft);
-    max-width: 48ch;
+  .empty-icon :global(.spark) {
+    width: 60px;
+    height: 60px;
+    color: var(--color-ocean);
   }
 
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border: 0;
+  [data-theme="dark"] .empty-icon :global(.spark) {
+    color: var(--color-jade);
   }
 
-  @media (max-width: 1024px) {
-    .posts-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .empty-icon span {
+    font-family: var(--font-display);
+    font-size: 54px;
+    font-style: italic;
+    font-weight: 800;
+    color: rgba(21, 21, 27, 0.4);
   }
 
-  @media (max-width: 600px) {
-    .posts-grid {
+  [data-theme="dark"] .empty-icon span {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .empty-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .empty-card h3 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 28px);
+    margin-bottom: 10px;
+  }
+
+  .empty-card p {
+    font-size: 13.5px;
+    color: rgba(21, 21, 27, 0.7);
+    margin: 0 0 24px;
+  }
+
+  [data-theme="dark"] .empty-card p {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  /* ============================================================
+     RESPONSIVE BREAKPOINTS
+     ============================================================ */
+  @media (max-width: 900px) {
+    .feature-card {
       grid-template-columns: 1fr;
     }
 
-    .filter-section {
-      position: static;
+    .feature-visual {
+      border-right: none;
+      border-bottom: var(--border-width) solid var(--border-strong);
+      min-height: 280px;
+    }
+
+    .section-title-wrap {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .journal-hero {
+      padding-top: 110px;
+    }
+
+    .journal-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-wrap {
+      width: 100%;
+    }
+
+    .filters {
+      overflow-x: auto;
+      padding-bottom: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .filter-btn {
+      flex-shrink: 0;
     }
   }
 </style>
-
-<script>
-  const searchInput = document.getElementById('post-search') as HTMLInputElement;
-  const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
-  const tagBtns = document.querySelectorAll<HTMLButtonElement>('.tag-btn');
-  const postCards = document.querySelectorAll<HTMLElement>('.post-card-wrapper');
-  const noResults = document.getElementById('no-results');
-  const resetBtn = document.getElementById('reset-filters');
-
-  let activeCategory = 'all';
-  let activeTag = '';
-  let searchQuery = '';
-
-  function filterPosts() {
-    let visibleCount = 0;
-
-    postCards.forEach((card) => {
-      const title = card.dataset.title ?? '';
-      const desc = card.dataset.desc ?? '';
-      const category = card.dataset.category ?? '';
-      const tags = card.dataset.tags ?? '';
-
-      const matchesSearch =
-        !searchQuery ||
-        title.includes(searchQuery) ||
-        desc.includes(searchQuery) ||
-        tags.includes(searchQuery);
-
-      const matchesCategory =
-        activeCategory === 'all' || category === activeCategory.toLowerCase();
-
-      const matchesTag = !activeTag || tags.includes(activeTag.toLowerCase());
-
-      const visible = matchesSearch && matchesCategory && matchesTag;
-      card.hidden = !visible;
-      if (visible) visibleCount++;
-    });
-
-    if (noResults) {
-      noResults.hidden = visibleCount > 0;
-    }
-  }
-
-  // Search
-  searchInput?.addEventListener('input', () => {
-    searchQuery = searchInput.value.trim().toLowerCase();
-    filterPosts();
-  });
-
-  // Category filter
-  filterPills.forEach((pill) => {
-    pill.addEventListener('click', () => {
-      filterPills.forEach((p) => p.classList.remove('filter-pill--active'));
-      pill.classList.add('filter-pill--active');
-      activeCategory = pill.dataset.filter ?? 'all';
-      filterPosts();
-    });
-  });
-
-  // Tag filter
-  tagBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if (btn.classList.contains('tag-btn--active')) {
-        btn.classList.remove('tag-btn--active');
-        activeTag = '';
-      } else {
-        tagBtns.forEach((b) => b.classList.remove('tag-btn--active'));
-        btn.classList.add('tag-btn--active');
-        activeTag = btn.dataset.tag ?? '';
-      }
-      filterPosts();
-    });
-  });
-
-  // Reset
-  resetBtn?.addEventListener('click', () => {
-    searchQuery = '';
-    activeCategory = 'all';
-    activeTag = '';
-    if (searchInput) searchInput.value = '';
-    filterPills.forEach((p, i) => p.classList.toggle('filter-pill--active', i === 0));
-    tagBtns.forEach((b) => b.classList.remove('tag-btn--active'));
-    filterPosts();
-  });
-</script>

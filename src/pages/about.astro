@@ -2,172 +2,180 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SiteHeader from '@/components/layout/SiteHeader.astro';
 import SiteFooter from '@/components/layout/SiteFooter.astro';
-import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SectionLabel from '@/components/ui/SectionLabel.astro';
+import Spark from '@/components/ui/icons/Spark.astro';
+import Flower from '@/components/ui/icons/Flower.astro';
+import ArrowIcon from '@/components/ui/icons/ArrowIcon.astro';
 import { portfolio } from '@/data/portfolio';
 ---
 
 <BaseLayout
-  title="Về tôi"
-  description={`Câu chuyện và định hướng của ${portfolio.name}`}
+  title="Giới thiệu"
+  description={`Câu chuyện và hành trình học tập của ${portfolio.name} — Sinh viên Công nghệ thông tin Phân hiệu Cà Mau.`}
 >
   <SiteHeader />
 
-  <main id="main-content">
+  <main id="main-content" class="route-page">
 
-    <!-- PAGE HERO -->
-    <section class="page-hero section">
-      <div class="container page-hero-inner">
-        <p class="page-hero-eyebrow">Đôi điều về tôi</p>
-        <h1 class="page-hero-title">Một câu chuyện<br /><em>đang được viết</em></h1>
-        <p class="page-hero-desc">
-          Đây là nơi tôi chia sẻ về hành trình, định hướng và những điều tôi quan tâm.
-        </p>
-      </div>
+    <!-- ===== SECTION 01: MANIFESTO / ĐÔI NÉT VỀ MÌNH ===== -->
+    <section class="manifesto section-pad" id="manifesto">
+      <div class="container">
+        <SectionLabel index="01">Đôi nét về mình</SectionLabel>
 
-      <!-- Decorative motif line -->
-      <div class="page-hero-motif" aria-hidden="true">
-        <svg viewBox="0 0 1200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 40 Q150 10 300 40 Q450 70 600 40 Q750 10 900 40 Q1050 70 1200 40"
-            stroke="var(--color-jade)" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/>
-          <path d="M0 50 Q150 20 300 50 Q450 80 600 50 Q750 20 900 50 Q1050 80 1200 50"
-            stroke="var(--color-ocean)" stroke-width="1" fill="none" opacity="0.25" stroke-linecap="round"/>
-        </svg>
-      </div>
-    </section>
-
-    <!-- PERSONAL STORY -->
-    <section class="story-section section">
-      <div class="container story-inner">
-        <div class="story-content">
-          <SectionHeading
-            eyebrow="Hồ sơ cá nhân"
-            title="Về Dương Hoàng Anh Chương"
-          />
-          <div class="story-text">
-            <p>{portfolio.personalStory}</p>
-            <p class="story-interests">{portfolio.interests}</p>
-          </div>
-        </div>
-
-        <div class="story-aside">
-          <!-- Decorative seal / stamp -->
-          <div class="seal" aria-hidden="true">
-            <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="80" cy="80" r="70" stroke="var(--color-terracotta)" stroke-width="2" opacity="0.6"/>
-              <circle cx="80" cy="80" r="60" stroke="var(--color-terracotta)" stroke-width="1" opacity="0.3"/>
-              <text x="80" y="72" text-anchor="middle" font-family="serif" font-size="22" fill="var(--color-terracotta)" opacity="0.7" font-style="italic">故</text>
-              <text x="80" y="100" text-anchor="middle" font-family="serif" font-size="11" fill="var(--color-terracotta)" opacity="0.5" letter-spacing="3">JOURNEY</text>
-            </svg>
+        <div class="manifesto-grid">
+          <!-- Portrait frame art -->
+          <div class="portrait-frame">
+            <div class="portrait-art" role="img" aria-label="Chữ CHA được tạo hình nghệ thuật">
+              <Flower class="portrait-flower flower-one" />
+              <Flower class="portrait-flower flower-two" />
+              <span>CHA</span>
+              <p>stay curious</p>
+            </div>
+            <span class="tape tape-one">Sinh viên IT</span>
+            <span class="tape tape-two">Digital journal</span>
           </div>
 
-          <!-- Info card -->
-          <div class="info-card">
-            {portfolio.academicInfo.map((item) => (
-              <div class="info-item">
-                <span class="info-label">{item.label}</span>
-                <span class="info-value">{item.value}</span>
+          <!-- Manifesto copy -->
+          <div class="manifesto-copy">
+            <Spark class="manifesto-spark" />
+            <p class="big-statement">
+              Mình đang học cách biến <em>tò mò</em> thành kiến thức, và biến mỗi ngày thành
+              một phần của <strong>hành trình.</strong>
+            </p>
+
+            <div class="about-notes">
+              <div class="about-story">
+                <p>
+                  {portfolio.personalStory}
+                </p>
+                <p class="about-interests">
+                  {portfolio.interests}
+                </p>
               </div>
-            ))}
-            <div class="info-item">
-              <span class="info-label">Email liên hệ</span>
-              <a href={`mailto:${portfolio.email}`} class="info-value info-link">{portfolio.email}</a>
+
+              <dl class="academic-dl">
+                {portfolio.academicInfo.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value}</dd>
+                  </div>
+                ))}
+                <div>
+                  <dt>Email</dt>
+                  <dd>
+                    <a href={`mailto:${portfolio.email}`} class="academic-email">{portfolio.email}</a>
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- VALUES -->
-    <section class="values-section section">
+    <!-- ===== MARQUEE TICKER ===== -->
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>HỌC HỎI</span> <Spark /> <span>SÁNG TẠO</span> <Flower /> <span>KHÁM PHÁ</span> <Spark />
+          <span>LEARN</span> <Spark /> <span>CREATE</span> <Flower /> <span>EXPLORE</span> <Spark />
+          <span>HỌC HỎI</span> <Spark /> <span>SÁNG TẠO</span> <Flower /> <span>KHÁM PHÁ</span> <Spark />
+          <span>LEARN</span> <Spark /> <span>CREATE</span> <Flower /> <span>EXPLORE</span> <Spark />
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 02: JOURNEY TIMELINE ===== -->
+    <section class="journey-section section-pad" id="journey">
       <div class="container">
-        <SectionHeading
-          eyebrow="Giá trị cốt lõi"
-          title="Những điều tôi tin vào"
-          align="center"
-        />
+        <SectionLabel index="02">Hành trình đang mở</SectionLabel>
+
+        <div class="section-title-wrap">
+          <h2 class="editorial-title">
+            Một timeline
+            <br />
+            <em>chưa có hồi kết.</em>
+          </h2>
+          <p class="section-subtitle">
+            Không cần vội vàng để có mọi câu trả lời. Mỗi giai đoạn là một khoảng trống đẹp để học, thử và trưởng thành.
+          </p>
+        </div>
+
+        <div class="timeline-container">
+          <div class="timeline-grid">
+            <article class="timeline-card">
+              <span class="timeline-year">2024</span>
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <h3 class="timeline-heading">Bắt đầu</h3>
+              <p class="timeline-desc">
+                Khởi đầu hành trình đại học chính quy tại Phân hiệu Cà Mau (Lớp 242101TH001). Tiếp cận những bài học lập trình nền tảng đầu tiên.
+              </p>
+            </article>
+
+            <article class="timeline-card timeline-active">
+              <span class="timeline-year">Hiện tại</span>
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <h3 class="timeline-heading">Đang học hỏi</h3>
+              <p class="timeline-desc">
+                Rèn luyện tư duy thuật toán, cấu trúc dữ liệu, công nghệ web và quan sát những khám phá mới trong thế giới phần mềm mỗi ngày.
+              </p>
+            </article>
+
+            <article class="timeline-card timeline-future">
+              <span class="timeline-year">2028</span>
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <h3 class="timeline-heading">Điểm đến mới</h3>
+              <p class="timeline-desc">
+                Tốt nghiệp ngành Công nghệ thông tin, sẵn sàng bước vào một chương tiếp theo đang chờ được viết với hành trang vững chắc.
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 03: VALUES & DIRECTION ===== -->
+    <section class="values-section section-pad" id="values">
+      <div class="container">
+        <SectionLabel index="03">Giá trị cốt lõi</SectionLabel>
+
+        <div class="section-title-wrap">
+          <h2 class="editorial-title">
+            Những điều
+            <br />
+            <em>mình tin vào.</em>
+          </h2>
+          <p class="section-subtitle">
+            Nguyên tắc định hướng cách mình tư duy, học tập và tiếp cận các thách thức trong ngành công nghệ.
+          </p>
+        </div>
 
         <div class="values-grid">
-          {portfolio.values.map((value, i) => (
-            <div class="value-card">
-              <div class="value-number" aria-hidden="true">0{i + 1}</div>
-              <h3 class="value-title">{value.title}</h3>
-              <p class="value-desc">{value.description}</p>
-            </div>
+          {portfolio.values.map((val, idx) => (
+            <article class="value-card">
+              <div class="value-index">0{idx + 1}</div>
+              <h3 class="value-title">{val.title}</h3>
+              <p class="value-desc">{val.description}</p>
+            </article>
           ))}
         </div>
-      </div>
-    </section>
 
-    <!-- SKILLS -->
-    <section class="skills-section section">
-      <div class="container">
-        <SectionHeading
-          eyebrow="Định hướng chuyên môn"
-          title="Kỹ năng & Nền tảng học tập"
-        />
-
-        {portfolio.skills.length > 0 ? (
-          <div class="skills-grid">
-            {portfolio.skills.map((group) => (
-              <div class="skill-group">
-                <h3 class="skill-group-title">{group.group}</h3>
-                <ul class="skill-tags" role="list">
-                  {group.items.map((skill) => (
-                    <li class="skill-tag">{skill}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+        <!-- Skills Notice (Strictly adhering to no fake skills) -->
+        <div class="skills-notice-card">
+          <div class="skills-notice-header">
+            <Spark class="skills-spark" />
+            <span class="skills-badge">ĐỊNH HƯỚNG CHUYÊN MÔN</span>
           </div>
-        ) : (
-          <div class="skills-placeholder-card">
-            <p>
-              Các kỹ năng chuyên sâu, ngôn ngữ lập trình và công nghệ thực hành sẽ được cập nhật đồng hành cùng các học phần chuyên ngành trong chương trình đào tạo tại Phân hiệu Cà Mau.
-            </p>
+          <h3 class="skills-notice-title">Kỹ năng & Nền tảng học tập</h3>
+          <p class="skills-notice-desc">
+            Các kỹ năng chuyên sâu, ngôn ngữ lập trình và công cụ thực hành sẽ được cập nhật đồng hành cùng các học phần chuyên ngành trong chương trình đào tạo tại Phân hiệu Cà Mau; không tự suy đoán hoặc tự tạo thành tích trước khi kiểm chứng thực tế.
+          </p>
+          <div class="skills-action">
+            <a href="/contact/" class="button button-primary">
+              <span>Kết nối và trao đổi</span>
+              <ArrowIcon />
+            </a>
           </div>
-        )}
-      </div>
-    </section>
-
-    <!-- EXPERIENCE TIMELINE -->
-    <section class="timeline-section section">
-      <div class="container">
-        <SectionHeading
-          eyebrow="Hành trình học tập"
-          title="Các mốc đào tạo"
-        />
-
-        <div class="timeline">
-          {portfolio.experienceTimeline.map((item, i) => (
-            <div class="timeline-item">
-              <div class="timeline-year">{item.year}</div>
-              <div class="timeline-connector" aria-hidden="true">
-                <span class="timeline-dot"></span>
-                {i < portfolio.experienceTimeline.length - 1 && (
-                  <span class="timeline-line"></span>
-                )}
-              </div>
-              <div class="timeline-content">
-                <h3 class="timeline-title">{item.title}</h3>
-                <p class="timeline-org">{item.organization}</p>
-                <p class="timeline-desc">{item.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="about-cta section">
-      <div class="container about-cta-inner">
-        <div class="about-cta-content">
-          <h2>Cùng kết nối và trao đổi học tập</h2>
-          <p>Mình luôn trân trọng những lời chia sẻ, góp ý từ thầy cô, bạn bè và anh chị đi trước.</p>
-        </div>
-        <div class="about-cta-actions">
-          <a href="/contact/" class="btn btn-primary">Liên hệ</a>
-          <a href="/post/" class="btn btn-secondary">Đọc bài viết</a>
         </div>
       </div>
     </section>
@@ -178,380 +186,623 @@ import { portfolio } from '@/data/portfolio';
 </BaseLayout>
 
 <style>
-  /* PAGE HERO */
-  .page-hero {
-    position: relative;
-    background: var(--color-paper-deep);
-    padding-block: clamp(3.5rem, 8vw, 5.5rem);
-    overflow: hidden;
+  /* ============================================================
+     SECTION PADDING & COMMON
+     ============================================================ */
+  .section-pad {
+    padding: clamp(70px, 9vw, 115px) 0;
+    border-bottom: var(--border-width) solid var(--border-color);
   }
 
-  .page-hero-inner {
-    max-width: 760px;
-  }
-
-  .page-hero-eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--color-jade);
-    margin-bottom: 1rem;
-    max-width: none;
-  }
-
-  .page-hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 400;
-    color: var(--color-ink);
-    line-height: 1.2;
-    margin-bottom: 1.25rem;
-  }
-
-  .page-hero-title em {
-    font-style: italic;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .page-hero-desc {
-    font-size: 1.125rem;
-    color: var(--color-ink-soft);
-    max-width: 56ch;
-  }
-
-  .page-hero-motif {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .page-hero-motif svg {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  /* STORY */
-  .story-inner {
+  .section-title-wrap {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 5rem;
-    align-items: start;
+    grid-template-columns: 1.5fr 0.8fr;
+    gap: clamp(30px, 5vw, 70px);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 60px);
   }
 
-  .story-text {
+  .editorial-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 6vw, 76px);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 0.92;
+    color: var(--text-primary);
+  }
+
+  .editorial-title em {
+    color: var(--color-ocean);
+    font-weight: 600;
+  }
+
+  [data-theme="dark"] .editorial-title em {
+    color: var(--color-jade);
+  }
+
+  .section-subtitle {
+    font-size: 14.5px;
+    line-height: 1.65;
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  /* ============================================================
+     MANIFESTO
+     ============================================================ */
+  .manifesto {
+    padding-top: 120px;
+    background:
+      radial-gradient(circle at 90% 15%, rgba(0, 175, 185, 0.08), transparent 30%),
+      var(--bg-surface);
+  }
+
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.85fr) 1.35fr;
+    gap: clamp(40px, 7vw, 90px);
+    align-items: center;
+  }
+
+  .portrait-frame {
+    position: relative;
+    padding: 12px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 40% 40% 24px 24px;
+    background: var(--bg-surface);
+    box-shadow: 0 16px 40px -8px rgba(0, 129, 167, 0.12);
+    transform: rotate(-1.5deg);
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+
+  .portrait-frame:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow: 0 24px 50px -10px rgba(0, 129, 167, 0.2);
+  }
+
+  [data-theme="dark"] .portrait-frame {
+    background: #171c23;
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 175, 185, 0.2);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .portrait-art {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .story-text p {
-    font-size: 1.0625rem;
-    line-height: 1.8;
-    color: var(--color-ink-soft);
-    max-width: none;
-  }
-
-  .story-interests {
-    font-style: italic;
-    color: var(--color-ink-soft);
-  }
-
-  .story-aside {
-    display: flex;
+    min-height: 440px;
+    overflow: hidden;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    justify-content: center;
+    border-radius: 40% 40% 16px 16px;
+    background:
+      radial-gradient(circle at center, rgba(255, 255, 255, 0.25), transparent 45%),
+      linear-gradient(145deg, #0081A7, #00AFB9);
   }
 
-  .seal svg {
+  .portrait-art::before {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    content: '';
+    animation: spin 30s linear infinite;
+  }
+
+  .portrait-art > span {
+    position: relative;
+    z-index: 2;
+    color: var(--color-parchment);
+    font-family: var(--font-display);
+    font-size: clamp(80px, 11vw, 140px);
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: -0.12em;
+    line-height: 0.8;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .portrait-art > p {
+    position: relative;
+    z-index: 2;
+    margin: 20px 0 0;
+    padding: 6px 14px;
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transform: rotate(-3deg);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .portrait-flower {
+    position: absolute;
     width: 140px;
     height: 140px;
-    animation: seal-spin 30s linear infinite;
+    opacity: 0.9;
   }
 
-  @keyframes seal-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  .flower-one {
+    top: 2%;
+    left: -12%;
+    color: var(--color-parchment);
+    transform: rotate(-20deg);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .seal svg { animation: none; }
+  .flower-two {
+    right: -15%;
+    bottom: 2%;
+    color: var(--color-terracotta);
+    transform: rotate(22deg);
   }
 
-  .info-card {
-    background: var(--color-paper-deep);
-    border-radius: 20px;
-    padding: 1.25rem 1.5rem;
-    border: 1px solid var(--color-border);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .info-label {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-muted);
-  }
-
-  .info-value {
-    font-size: 0.9375rem;
+  .tape {
+    position: absolute;
+    z-index: 3;
+    padding: 7px 14px;
+    border-radius: 8px;
+    background: var(--color-parchment);
     color: var(--color-ink);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform var(--transition-fast);
   }
 
-  .info-link {
-    color: var(--color-ocean);
-    text-decoration: none;
+  .tape:hover {
+    transform: scale(1.06) rotate(0deg);
   }
 
-  .info-link:hover {
-    color: var(--color-jade);
+  .tape-one {
+    top: 16%;
+    left: -22px;
+    transform: rotate(-8deg);
   }
 
-  /* VALUES */
-  .values-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+  .tape-two {
+    right: -24px;
+    bottom: 18%;
+    background: var(--color-jade);
+    color: var(--color-white);
+    transform: rotate(8deg);
   }
 
-  .value-card {
-    background: white;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    padding: 2rem;
+  .manifesto-copy {
     position: relative;
-    overflow: hidden;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
   }
 
-  .value-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
+  .manifesto-spark {
+    position: absolute;
+    top: -45px;
+    right: 5%;
+    width: 44px;
+    height: 44px;
+    color: var(--color-jade);
   }
 
-  .value-number {
+  .big-statement {
+    max-width: 760px;
+    margin: 0;
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-size: clamp(34px, 4.4vw, 58px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+    color: var(--text-primary);
+  }
+
+  .big-statement em {
+    color: var(--color-ocean);
+  }
+
+  [data-theme="dark"] .big-statement em {
     color: var(--color-jade);
-    opacity: 0.15;
-    line-height: 1;
-    margin-bottom: 0.5rem;
-    font-weight: 400;
   }
 
-  .value-title {
-    font-size: 1.125rem;
-    font-weight: 500;
-    color: var(--color-ink);
-    margin-bottom: 0.625rem;
+  .big-statement strong {
+    position: relative;
+    font-weight: 800;
+    white-space: nowrap;
   }
 
-  .value-desc {
-    font-size: 0.9375rem;
-    color: var(--color-ink-soft);
-    line-height: 1.6;
-    max-width: none;
+  .big-statement strong::after {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    left: 0;
+    height: 8px;
+    background: var(--color-parchment);
+    content: '';
+    z-index: -1;
+    transform: rotate(-0.5deg);
+    opacity: 0.8;
   }
 
-  /* SKILLS */
-  .skills-section {
-    background: var(--color-paper-deep);
+  [data-theme="dark"] .big-statement strong::after {
+    background: var(--color-ocean);
+    opacity: 0.5;
   }
 
-  .skills-grid {
+  .about-notes {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 36px;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border-color);
   }
 
-  .skill-group-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-muted);
-    margin-bottom: 1rem;
-  }
-
-  .skill-tags {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .skill-tag {
-    padding: 0.4rem 0.875rem;
-    background: white;
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    font-size: 0.875rem;
-    color: var(--color-ink-soft);
-    transition: border-color var(--transition-fast), color var(--transition-fast);
-  }
-
-  .skill-tag:hover {
-    border-color: var(--color-jade);
-    color: var(--color-jade);
-  }
-
-  .skills-placeholder-card {
-    background: white;
-    border-radius: var(--radius-card);
-    padding: 2.5rem;
-    border: 1px dashed var(--color-border);
-    text-align: center;
-    max-width: 680px;
-    margin-inline: auto;
-  }
-
-  .skills-placeholder-card p {
-    font-size: 1rem;
-    color: var(--color-ink-soft);
+  .about-story p {
+    font-size: 14.5px;
     line-height: 1.7;
-    margin-inline: auto;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
   }
 
-  /* TIMELINE */
-  .timeline {
+  .about-interests {
+    font-style: italic;
+    color: var(--text-muted) !important;
+  }
+
+  .academic-dl {
+    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    max-width: 760px;
+    gap: 8px;
   }
 
-  .timeline-item {
+  .academic-dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--bg-surface-alt);
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .academic-dl div:hover {
+    transform: translateX(4px);
+    border-color: var(--color-jade);
+  }
+
+  .academic-dl dt {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .academic-dl dd {
+    margin: 0;
+    text-align: right;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .academic-email {
+    color: var(--color-ocean);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  [data-theme="dark"] .academic-email {
+    color: var(--color-jade);
+  }
+
+  /* ============================================================
+     MARQUEE TICKER
+     ============================================================ */
+  .marquee-wrap {
+    overflow: hidden;
+    padding: 12px 0 14px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-surface-alt);
+    color: var(--text-primary);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 28px;
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.2vw, 46px);
+    font-style: italic;
+    font-weight: 800;
+    line-height: 1;
+    animation: marquee 24s linear infinite;
+  }
+
+  .marquee-track :global(svg) {
+    width: 24px;
+    height: 24px;
+    color: var(--color-jade);
+  }
+
+  /* ============================================================
+     JOURNEY TIMELINE
+     ============================================================ */
+  .journey-section {
+    background: #0B0E12;
+    color: #F8FAFC;
+  }
+
+  .journey-section .section-label-number {
+    background: var(--color-jade);
+    color: #0F1318;
+  }
+
+  .journey-section .section-label-text,
+  .journey-section .editorial-title {
+    color: #F8FAFC;
+  }
+
+  .journey-section .section-subtitle {
+    color: #94A3B8;
+  }
+
+  .timeline-container {
+    position: relative;
+    margin-top: clamp(50px, 7vw, 90px);
+  }
+
+  .timeline-grid {
+    position: relative;
     display: grid;
-    grid-template-columns: 80px 32px 1fr;
-    gap: 0 1.5rem;
-    min-height: 80px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .timeline-grid::before {
+    position: absolute;
+    top: 42px;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.18);
+    content: '';
+  }
+
+  .timeline-card {
+    position: relative;
+    padding-right: clamp(24px, 4vw, 50px);
+    transition: transform var(--transition-base);
+    cursor: default;
+  }
+
+  .timeline-card:hover {
+    transform: translateY(-4px);
   }
 
   .timeline-year {
-    font-family: var(--font-display);
-    font-size: 0.875rem;
-    color: var(--color-muted);
-    padding-top: 0.25rem;
-    text-align: right;
-    font-style: italic;
-  }
-
-  .timeline-connector {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: inline-block;
+    color: var(--color-parchment);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
 
   .timeline-dot {
-    width: 12px;
-    height: 12px;
+    position: relative;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    margin: 18px 0 32px;
+    border: 3px solid #0B0E12;
     border-radius: 50%;
-    background: var(--gradient-primary);
-    flex-shrink: 0;
-    margin-top: 0.25rem;
+    outline: 1.5px solid rgba(255, 255, 255, 0.4);
+    background: var(--color-parchment);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   }
 
-  .timeline-line {
-    flex: 1;
-    width: 1.5px;
-    background: var(--color-border);
-    margin-block: 4px;
+  .timeline-card:hover .timeline-dot {
+    transform: scale(1.3);
+    box-shadow: 0 0 16px var(--color-jade);
   }
 
-  .timeline-content {
-    padding-bottom: 2rem;
+  .timeline-active .timeline-dot {
+    background: var(--color-jade);
+    outline-color: var(--color-jade);
   }
 
-  .timeline-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-ink);
-    margin-bottom: 0.25rem;
+  .timeline-future .timeline-dot {
+    background: var(--color-ocean);
   }
 
-  .timeline-org {
-    font-size: 0.875rem;
-    color: var(--color-jade);
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    max-width: none;
+  .timeline-heading {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.3vw, 28px);
+    color: #F8FAFC;
   }
 
   .timeline-desc {
-    font-size: 0.9375rem;
-    color: var(--color-ink-soft);
-    line-height: 1.6;
-    max-width: none;
+    margin: 0;
+    color: #94A3B8;
+    font-size: 13.5px;
+    line-height: 1.65;
+    max-width: 320px;
   }
 
-  /* ABOUT CTA */
-  .about-cta {
-    background: var(--color-paper-deep);
+  /* ============================================================
+     VALUES SECTION
+     ============================================================ */
+  .values-section {
+    background: var(--bg-primary);
   }
 
-  .about-cta-inner {
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .value-card {
+    padding: clamp(28px, 4vw, 36px);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 24px;
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-fast);
+  }
+
+  .value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--color-jade);
+  }
+
+  .value-index {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 800;
+    font-style: italic;
+    color: var(--color-ocean);
+    margin-bottom: 14px;
+  }
+
+  [data-theme="dark"] .value-index {
+    color: var(--color-jade);
+  }
+
+  .value-title {
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .value-desc {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .skills-notice-card {
+    padding: clamp(32px, 5vw, 44px);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 24px;
+    background: var(--bg-surface-alt);
+    box-shadow: var(--shadow-card);
+  }
+
+  .skills-notice-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
   }
 
-  .about-cta-content h2 {
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-    margin-bottom: 0.5rem;
+  .skills-spark {
+    width: 22px;
+    height: 22px;
+    color: var(--color-jade);
   }
 
-  .about-cta-content p {
-    color: var(--color-ink-soft);
-    max-width: none;
+  .skills-badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--color-parchment);
+    color: var(--color-ink);
   }
 
-  .about-cta-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-shrink: 0;
-    flex-wrap: wrap;
+  [data-theme="dark"] .skills-badge {
+    background: rgba(0, 175, 185, 0.2);
+    color: var(--color-jade);
   }
 
-  @media (max-width: 768px) {
-    .story-inner {
+  .skills-notice-title {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .skills-notice-desc {
+    font-size: 14.5px;
+    line-height: 1.7;
+    max-width: 72ch;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  /* ============================================================
+     RESPONSIVE BREAKPOINTS
+     ============================================================ */
+  @media (max-width: 900px) {
+    .manifesto-grid {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 40px;
     }
 
-    .story-aside {
-      flex-direction: row;
-      align-items: flex-start;
+    .portrait-frame {
+      max-width: 360px;
+      margin-inline: auto;
     }
 
-    .seal svg {
-      width: 100px;
-      height: 100px;
+    .about-notes {
+      grid-template-columns: 1fr;
+      gap: 24px;
     }
 
-    .about-cta-inner {
-      flex-direction: column;
-      align-items: flex-start;
+    .timeline-grid {
+      grid-template-columns: 1fr;
+      margin-top: 40px;
+      padding-left: 24px;
+    }
+
+    .timeline-grid::before {
+      top: 6px;
+      bottom: 0;
+      left: 8px;
+      width: 1px;
+      height: auto;
+    }
+
+    .timeline-card {
+      padding: 0 0 36px 24px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 0;
+      left: -23px;
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .manifesto {
+      padding-top: 100px;
+    }
+
+    .big-statement {
+      font-size: 32px;
+    }
+
+    .tape-one {
+      left: -12px;
+    }
+
+    .tape-two {
+      right: -12px;
     }
   }
 </style>

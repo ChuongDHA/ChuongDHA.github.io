@@ -1,0 +1,57 @@
+---
+interface Props {
+  index: string;
+  class?: string;
+}
+
+const { index, class: className = '' } = Astro.props;
+---
+
+<div class:list={['section-label', className]}>
+  <span class="section-label-number">{index}</span>
+  <div class="section-label-text">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+
+  .section-label-number {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border: 1.5px solid var(--border-strong, var(--color-ink));
+    border-radius: 50%;
+    background: var(--color-parchment, #FED9B7);
+    color: var(--color-ink, #15151b);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 2px 2px 0 var(--border-strong, var(--color-ink));
+    flex-shrink: 0;
+  }
+
+  .section-label-text {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+
+  :global([data-theme="dark"]) .section-label-number {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 2px 2px 0 var(--color-jade);
+    background: var(--color-jade);
+    color: var(--color-ink);
+  }
+</style>

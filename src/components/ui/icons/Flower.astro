@@ -1,0 +1,40 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<svg
+  class:list={['flower', className]}
+  aria-hidden="true"
+  viewBox="0 0 160 160"
+>
+  <g class="flower-group">
+    <ellipse cx="80" cy="42" rx="23" ry="39" />
+    <ellipse cx="80" cy="118" rx="23" ry="39" />
+    <ellipse cx="42" cy="80" rx="39" ry="23" />
+    <ellipse cx="118" cy="80" rx="39" ry="23" />
+    <circle cx="80" cy="80" r="21" class="flower-center" />
+  </g>
+</svg>
+
+<style>
+  .flower {
+    overflow: visible;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .flower ellipse,
+  .flower circle {
+    fill: currentColor;
+    stroke: var(--color-ink, #15151b);
+    stroke-width: 2.5px;
+  }
+
+  .flower .flower-center {
+    fill: var(--color-parchment, #FED9B7);
+  }
+</style>

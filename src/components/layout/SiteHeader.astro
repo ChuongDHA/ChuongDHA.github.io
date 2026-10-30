@@ -1,366 +1,110 @@
 ---
-import { navigation } from '@/data/navigation';
-import { portfolio } from '@/data/portfolio';
+import ArrowIcon from '@/components/ui/icons/ArrowIcon.astro';
+import ThemeIcon from '@/components/ui/icons/ThemeIcon.astro';
 
 const currentPath = Astro.url.pathname;
 
-function isActive(href: string) {
-  if (href === '/') return currentPath === '/';
-  return currentPath.startsWith(href);
+const navItems = [
+  { label: 'Trang chủ', href: '/' },
+  { label: 'Giới thiệu', href: '/about/' },
+  { label: 'Nhật ký', href: '/post/' },
+  { label: 'Liên hệ', href: '/contact/' },
+];
+
+function isCurrent(href: string) {
+  const normCurrent = currentPath === '/' ? '/' : currentPath.replace(/\/+$/, '');
+  const normHref = href === '/' ? '/' : href.replace(/\/+$/, '');
+  if (normHref === '/') return normCurrent === '/';
+  return normCurrent.startsWith(normHref);
 }
 ---
 
 <header class="site-header" id="site-header">
-  <div class="header-inner container">
-    <!-- Logo / Monogram -->
-    <a href="/" class="header-logo" aria-label={`${portfolio.name} — Trang chủ`}>
-      <span class="monogram">{portfolio.shortName}</span>
+  <a class="brand" href="/" aria-label="CHA — về trang chủ">
+    C<span>H</span>A
+  </a>
+
+  <nav id="site-nav" aria-label="Điều hướng chính">
+    {navItems.map((item) => (
+      <a
+        href={item.href}
+        class:list={[{ current: isCurrent(item.href) }]}
+        aria-current={isCurrent(item.href) ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="header-tools">
+    <button
+      class="theme-button"
+      id="theme-toggle"
+      type="button"
+      aria-label="Đổi chế độ sáng / tối"
+      title="Đổi giao diện sáng / tối"
+    >
+      <ThemeIcon />
+    </button>
+
+    <a class="header-cta" href="/contact/">
+      Let’s talk <ArrowIcon diagonal />
     </a>
 
-    <!-- Desktop Navigation -->
-    <nav class="header-nav" aria-label="Điều hướng chính">
-      <ul role="list">
-        {navigation.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class:list={['nav-link', { 'nav-link--active': isActive(item.href) }]}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
-    <!-- CTA + Mobile toggle -->
-    <div class="header-actions">
-      <a href="/contact/" class="btn btn-primary header-cta">Liên hệ</a>
-
-      <button
-        class="mobile-menu-btn"
-        id="mobile-menu-btn"
-        aria-expanded="false"
-        aria-controls="mobile-nav"
-        aria-label="Mở menu"
-      >
-        <span class="hamburger" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
-    </div>
+    <button
+      class="menu-button"
+      id="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-label="Mở menu"
+    >
+      <span></span>
+      <span></span>
+    </button>
   </div>
 </header>
 
-<!-- Mobile Navigation overlay -->
-<div class="mobile-nav-overlay" id="mobile-nav-overlay" aria-hidden="true"></div>
-<nav
-  class="mobile-nav"
-  id="mobile-nav"
-  aria-label="Menu di động"
-  aria-hidden="true"
->
-  <ul role="list">
-    {navigation.map((item) => (
-      <li>
-        <a
-          href={item.href}
-          class:list={['mobile-nav-link', { 'mobile-nav-link--active': isActive(item.href) }]}
-          aria-current={isActive(item.href) ? 'page' : undefined}
-        >
-          {item.label}
-        </a>
-      </li>
-    ))}
-  </ul>
-  <a href="/contact/" class="btn btn-primary mobile-cta">Liên hệ ngay</a>
-</nav>
-
-<style>
-  .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(251, 248, 242, 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
-    transition: box-shadow var(--transition-base);
-  }
-
-  .site-header.scrolled {
-    box-shadow: var(--shadow-soft);
-  }
-
-  .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    height: 68px;
-  }
-
-  /* Logo / Monogram */
-  .header-logo {
-    text-decoration: none;
-    flex-shrink: 0;
-  }
-
-  .monogram {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: var(--gradient-primary);
-    color: white;
-    font-family: var(--font-display);
-    font-size: 0.9rem;
-    font-weight: 500;
-    border-radius: 10px;
-    letter-spacing: 0.05em;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
-  }
-
-  .header-logo:hover .monogram {
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(0, 129, 167, 0.35);
-  }
-
-  /* Desktop nav */
-  .header-nav {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-  }
-
-  .header-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 0.25rem;
-  }
-
-  .nav-link {
-    position: relative;
-    display: block;
-    padding: 0.4rem 0.875rem;
-    font-family: var(--font-body);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--color-ink-soft);
-    text-decoration: none;
-    border-radius: 10px;
-    transition: color var(--transition-fast), background var(--transition-fast);
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    border-radius: 2px;
-    transition: width var(--transition-base);
-  }
-
-  .nav-link:hover {
-    color: var(--color-ocean);
-    background: rgba(0, 129, 167, 0.06);
-  }
-
-  .nav-link:hover::after,
-  .nav-link--active::after {
-    width: calc(100% - 1.75rem);
-  }
-
-  .nav-link--active {
-    color: var(--color-ocean);
-  }
-
-  /* Header actions */
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .header-cta {
-    padding: 0.5rem 1.25rem;
-    font-size: 0.875rem;
-  }
-
-  /* Mobile menu button */
-  .mobile-menu-btn {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: 1.5px solid var(--color-border);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: border-color var(--transition-fast), background var(--transition-fast);
-  }
-
-  .mobile-menu-btn:hover {
-    border-color: var(--color-ocean);
-    background: rgba(0, 129, 167, 0.06);
-  }
-
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .hamburger span {
-    display: block;
-    width: 18px;
-    height: 1.5px;
-    background: var(--color-ink);
-    border-radius: 2px;
-    transition: transform var(--transition-base), opacity var(--transition-base);
-  }
-
-  /* Mobile navigation */
-  .mobile-nav-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(32, 52, 58, 0.4);
-    z-index: 200;
-    opacity: 0;
-    transition: opacity var(--transition-base);
-  }
-
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(320px, 85vw);
-    background: var(--color-paper);
-    z-index: 300;
-    padding: 5rem 2rem 2rem;
-    transform: translateX(100%);
-    transition: transform var(--transition-slow);
-    flex-direction: column;
-    gap: 0.5rem;
-    box-shadow: -8px 0 40px rgba(32, 52, 58, 0.15);
-  }
-
-  .mobile-nav ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    flex: 1;
-  }
-
-  .mobile-nav-link {
-    display: block;
-    padding: 0.875rem 1rem;
-    font-family: var(--font-body);
-    font-size: 1.0625rem;
-    font-weight: 500;
-    color: var(--color-ink-soft);
-    text-decoration: none;
-    border-radius: 12px;
-    transition: color var(--transition-fast), background var(--transition-fast);
-  }
-
-  .mobile-nav-link:hover,
-  .mobile-nav-link--active {
-    color: var(--color-ocean);
-    background: rgba(0, 129, 167, 0.08);
-  }
-
-  .mobile-cta {
-    width: 100%;
-    justify-content: center;
-    margin-top: 1.5rem;
-  }
-
-  /* Open state */
-  .mobile-nav-overlay.open {
-    display: block;
-    opacity: 1;
-  }
-
-  .mobile-nav.open {
-    display: flex;
-    transform: translateX(0);
-  }
-
-  @media (max-width: 768px) {
-    .header-nav,
-    .header-cta {
-      display: none;
+<script is:inline>
+  (function() {
+    // Theme toggle handler
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function() {
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        const next = isDark ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem('cha-theme', next);
+        } catch (e) {}
+      });
     }
 
-    .mobile-menu-btn {
-      display: flex;
+    // Mobile menu handler
+    const menuBtn = document.getElementById('menu-toggle');
+    const nav = document.getElementById('site-nav');
+    if (menuBtn && nav) {
+      menuBtn.addEventListener('click', function() {
+        const isOpen = nav.classList.toggle('nav-open');
+        menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        menuBtn.setAttribute('aria-label', isOpen ? 'Đóng menu' : 'Mở menu');
+      });
+
+      // Close menu when clicking outside or pressing Escape
+      document.addEventListener('click', function(e) {
+        if (!nav.contains(e.target) && !menuBtn.contains(e.target) && nav.classList.contains('nav-open')) {
+          nav.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.setAttribute('aria-label', 'Mở menu');
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && nav.classList.contains('nav-open')) {
+          nav.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.setAttribute('aria-label', 'Mở menu');
+        }
+      });
     }
-  }
-</style>
-
-<script>
-  const btn = document.getElementById('mobile-menu-btn');
-  const nav = document.getElementById('mobile-nav');
-  const overlay = document.getElementById('mobile-nav-overlay');
-  const header = document.getElementById('site-header');
-
-  function openMenu() {
-    nav?.classList.add('open');
-    overlay?.classList.add('open');
-    nav?.removeAttribute('aria-hidden');
-    overlay?.removeAttribute('aria-hidden');
-    btn?.setAttribute('aria-expanded', 'true');
-    btn?.setAttribute('aria-label', 'Đóng menu');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeMenu() {
-    nav?.classList.remove('open');
-    overlay?.classList.remove('open');
-    nav?.setAttribute('aria-hidden', 'true');
-    overlay?.setAttribute('aria-hidden', 'true');
-    btn?.setAttribute('aria-expanded', 'false');
-    btn?.setAttribute('aria-label', 'Mở menu');
-    document.body.style.overflow = '';
-  }
-
-  btn?.addEventListener('click', () => {
-    const isOpen = btn.getAttribute('aria-expanded') === 'true';
-    isOpen ? closeMenu() : openMenu();
-  });
-
-  overlay?.addEventListener('click', closeMenu);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
-  });
-
-  // Close menu when a nav link is clicked
-  nav?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMenu);
-  });
-
-  // Sticky header shadow on scroll
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-      header?.classList.add('scrolled');
-    } else {
-      header?.classList.remove('scrolled');
-    }
-  }, { passive: true });
+  })();
 </script>

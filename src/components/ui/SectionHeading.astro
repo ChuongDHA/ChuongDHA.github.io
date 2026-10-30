@@ -18,13 +18,13 @@ const {
 
 <div class:list={['section-heading', `align-${align}`, className]}>
   {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-  <h2 class="heading">{title}</h2>
+  <h2 class="heading" set:html={title} />
   {description && <p class="description">{description}</p>}
 </div>
 
 <style>
   .section-heading {
-    margin-bottom: 3rem;
+    margin-bottom: clamp(32px, 5vw, 56px);
   }
 
   .align-center {
@@ -37,28 +37,41 @@ const {
 
   .eyebrow {
     font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.16em;
+    color: var(--color-ocean);
+    margin-bottom: 8px;
+  }
+
+  [data-theme="dark"] .eyebrow {
     color: var(--color-jade);
-    margin-bottom: 0.625rem;
-    max-width: none;
   }
 
   .heading {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: 400;
-    color: var(--color-ink);
-    line-height: 1.2;
-    margin-bottom: 0.75rem;
+    font-size: clamp(32px, 4.5vw, 56px);
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 12px;
+  }
+
+  :global(.heading em) {
+    color: var(--color-ocean);
+    font-style: italic;
+  }
+
+  [data-theme="dark"] :global(.heading em) {
+    color: var(--color-jade);
   }
 
   .description {
-    font-size: 1.0625rem;
-    color: var(--color-ink-soft);
-    max-width: 56ch;
-    line-height: 1.7;
+    font-size: clamp(13px, 1.3vw, 15px);
+    color: var(--text-secondary);
+    max-width: 58ch;
+    line-height: 1.65;
   }
 </style>

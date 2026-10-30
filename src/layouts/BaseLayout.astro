@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import { portfolio } from '@/data/portfolio';
+import ArrowIcon from '@/components/ui/icons/ArrowIcon.astro';
+import CursorEffect from '@/components/effects/CursorEffect.astro';
 
 interface Props {
   title?: string;
@@ -24,7 +26,7 @@ const imageURL = new URL(image, Astro.site);
 ---
 
 <!doctype html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -58,15 +60,28 @@ const imageURL = new URL(image, Astro.site);
       <meta property="article:published_time" content={pubDate.toISOString()} />
     )}
 
-    <!-- Fonts: Be Vietnam Pro + Noto Serif via Google Fonts -->
+    <!-- Inline Theme Init Script (Zero FOUC) -->
+    <script is:inline>
+      (function() {
+        try {
+          const stored = localStorage.getItem('cha-theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.dataset.theme = 'dark';
+          } else {
+            document.documentElement.dataset.theme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Google Fonts: Noto Serif + Be Vietnam Pro -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif:ital,wght@0,400;0,500;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
       rel="stylesheet"
     />
-
-
 
     <!-- JSON-LD Person schema -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -76,17 +91,111 @@ const imageURL = new URL(image, Astro.site);
       "url": Astro.site?.href,
       "email": portfolio.email,
       "sameAs": portfolio.socialLinks.map(l => l.href),
+      "jobTitle": portfolio.role,
+      "alumniOf": portfolio.institution
     })} />
 
-    <!-- Sitemap -->
+    <!-- Sitemap & RSS Feed -->
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={portfolio.name} href="/rss.xml" />
   </head>
 
   <body>
+    <!-- Ambient mouse spotlight & interactive cursor -->
+    <CursorEffect />
+
     <!-- Skip to content -->
     <a href="#main-content" class="skip-link">Bỏ qua đến nội dung chính</a>
 
     <slot />
+
+    <!-- Global Floating Back to top button -->
+    <button
+      id="back-to-top-btn"
+      class="back-to-top"
+      type="button"
+      aria-label="Trở về đầu trang"
+      title="Trở về đầu trang"
+    >
+      <ArrowIcon />
+    </button>
+
+    <script is:inline>
+      (function() {
+        // ── Back to top button ──────────────────────────────────────────
+        var btn = document.getElementById('back-to-top-btn');
+        if (btn) {
+          window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+              btn.classList.add('visible');
+            } else {
+              btn.classList.remove('visible');
+            }
+          }, { passive: true });
+
+          btn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+
+        // ── Scroll-reveal (IntersectionObserver) ────────────────────────
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          var revealEls = document.querySelectorAll(
+            '.timeline-card, .value-card, .post-card, .project-card, ' +
+            '.contact-detail-card, .feature-card, .art-card, .empty-archive-card, ' +
+            '.manifesto-grid, .section-title-wrap, .journal-controls, ' +
+            '.posts-grid-wrap, .connect-box, .related-section, .article-share-bar, ' +
+            '.article-back-nav, .contact-form'
+          );
+
+          revealEls.forEach(function(el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(28px)';
+            el.style.transition = 'opacity 0.55s cubic-bezier(0.2,0.8,0.2,1), transform 0.55s cubic-bezier(0.2,0.8,0.2,1)';
+          });
+
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+          revealEls.forEach(function(el) { observer.observe(el); });
+
+          // Stagger grid children
+          var grids = document.querySelectorAll(
+            '.posts-grid, .works-grid, .journal-grid, .values-grid, .timeline-grid, .related-grid'
+          );
+          grids.forEach(function(grid) {
+            var children = grid.children;
+            for (var i = 0; i < children.length; i++) {
+              (function(child, delay) {
+                child.style.opacity = '0';
+                child.style.transform = 'translateY(32px)';
+                child.style.transition =
+                  'opacity 0.5s ' + delay + 'ms cubic-bezier(0.2,0.8,0.2,1), ' +
+                  'transform 0.5s ' + delay + 'ms cubic-bezier(0.2,0.8,0.2,1)';
+
+                var childObserver = new IntersectionObserver(function(entries) {
+                  entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                      entry.target.style.opacity = '1';
+                      entry.target.style.transform = 'translateY(0)';
+                      childObserver.unobserve(entry.target);
+                    }
+                  });
+                }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+
+                childObserver.observe(child);
+              })(children[i], i * 80);
+            }
+          });
+        }
+      })();
+    </script>
   </body>
 </html>
